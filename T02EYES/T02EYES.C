@@ -51,25 +51,54 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   HDC hDC;
   PAINTSTRUCT ps;
   static INT w, h, x, y;
+  static HDC hMemDC;
+  static HBITMAP hBm;
+  INT i;
 
   switch (Msg)
   {
   case WM_CREATE:
+    hDC = GetDC(hWnd);
+    hMemDC = CreateCompatibleDC(hDC);
+    ReleaseDC(hWnd, hDC);
+    hBm = NULL;
+
     SetTimer(hWnd, 30, 102, NULL);
     return 0;
   case WM_TIMER:
-    InvalidateRect(hWnd, NULL, TRUE);
+    InvalidateRect(hWnd, NULL, FALSE);
+
+    SetDCBrushColor(hMemDC, RGB(60, 60, 200));
+    SetDCPenColor(hMemDC, RGB(120, 60, 200));
+    Rectangle(hMemDC, -1, -1, 2000, 900);
+
+    srand(30);
+    for (i = 0; i < 100; i++)
+      DrawEye(hMemDC, 20 + rand() % 700, 20 + rand() % 700,
+        50 + rand() % 50, 20 + rand() % 20, x, y);
+
     return 0;
   case WM_SIZE:
     w = LOWORD(lParam);
     h = HIWORD(lParam);
+
+    if (hBm != NULL)
+      DeleteObject(hBm);
+    hDC = GetDC(hWnd);
+    hBm = CreateCompatibleBitmap(hDC, w, h);
+    ReleaseDC(hWnd, hDC);
+    SelectObject(hMemDC, hBm);
     return 0;
   case WM_MOUSEMOVE:
     x = LOWORD(lParam);
     y = HIWORD(lParam);
+  case WM_KEYDOWN:
+    if (wParam == VK_ESCAPE)
+      SendMessage(hWnd, WM_CLOSE, 0, 0);
+    return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-    DrawEye(hDC, w / 2, h / 2, 80, 20, x, y);
+    BitBlt(hDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
     EndPaint(hWnd, &ps);
     return 0;
   case WM_CLOSE:
@@ -78,6 +107,9 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       DestroyWindow(hWnd);
     return 0;
   case WM_DESTROY:
+    if (hBm != NULL)
+      DeleteObject(hBm);
+    DeleteDC(hMemDC);
     PostMessage(hWnd, WM_QUIT, 0, 0);
     KillTimer(hWnd, 30);
     return 0;
@@ -94,6 +126,7 @@ VOID DrawEye( HDC hDC, INT X, INT Y, INT R1, INT R2, INT Mx, INT My )
     return;
   SelectObject(hDC, GetStockObject(DC_PEN));
   SelectObject(hDC, GetStockObject(DC_BRUSH));
+  SetDCBrushColor(hDC, RGB(0, 0, 0));
   SetDCBrushColor(hDC, RGB(255, 255, 255));
   Ellipse(hDC, X - R1, Y + R1, X + R1, Y - R1);
   SetDCBrushColor(hDC, RGB(0, 100, 150));
