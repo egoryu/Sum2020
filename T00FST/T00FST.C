@@ -3,5 +3,5 @@
 
 void main( void )
 {
-  MessageBox(NULL, "Sum", "Info", MB_HELP | MB_ICONINFORMATION);
+  MessageBox(NULL, "Sum", "Info", MB_HELP | MB_APPLMODAL);
 }
