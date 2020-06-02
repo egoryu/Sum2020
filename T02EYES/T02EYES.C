@@ -74,7 +74,7 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 
     srand(30);
     for (i = 0; i < 100; i++)
-      DrawEye(hMemDC, 20 + rand() % 700, 20 + rand() % 700,
+      DrawEye(hMemDC, 20 + rand() % 1800, 20 + rand() % 700,
         50 + rand() % 50, 20 + rand() % 20, x, y);
 
     return 0;
@@ -88,6 +88,8 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     hBm = CreateCompatibleBitmap(hDC, w, h);
     ReleaseDC(hWnd, hDC);
     SelectObject(hMemDC, hBm);
+
+    SendMessage(hWnd, WM_TIMER, 0, 0);
     return 0;
   case WM_MOUSEMOVE:
     x = LOWORD(lParam);
