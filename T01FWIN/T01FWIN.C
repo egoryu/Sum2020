@@ -28,7 +28,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
     MessageBox(NULL, "Error regisrer window class", "ERROR", MB_OK);
     return 0;
   }
-  hWnd = CreateWindow(WND_CLASS_NAME, "Press", WS_OVERLAPPEDWINDOW,
+
+  hWnd = CreateWindow(WND_CLASS_NAME, "EN5", WS_OVERLAPPEDWINDOW,
     CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
     NULL, NULL, hInstance, NULL);
 
@@ -42,14 +43,37 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
 
 LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
+  HDC hDC;
+  PAINTSTRUCT ps;
+  static INT w, h;
+
   switch (Msg)
   {
+  case WM_CREATE:
+    SetTimer(hWnd, 30, 102, NULL);
+    return 0;
+  case WM_TIMER:
+    InvalidateRect(hWnd, NULL, TRUE);
+    return 0;
+  case WM_SIZE:
+    w = LOWORD(lParam);
+    h = HIWORD(lParam);
+    return 0;
+  case WM_PAINT:
+    hDC = BeginPaint(hWnd, &ps);
+    SelectObject(hDC, GetStockObject(DC_BRUSH));
+    SelectObject(hDC, GetStockObject(DC_PEN));
+
+    Ellipse(hDC, 0, 0, 100, 100);
+    EndPaint(hWnd, &ps);
+    return 0;
   case WM_CLOSE:
     if (MessageBox(hWnd, "Are you sure?", "Close", MB_YESNO | MB_DEFBUTTON2 | MB_ICONQUESTION) == IDYES)
       DestroyWindow(hWnd);
     return 0;
   case WM_DESTROY:
     PostMessage(hWnd, WM_QUIT, 0, 0);
+    KillTimer(hWnd, 30);
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
