@@ -9,7 +9,7 @@
 #include <windows.h>
 
 /* Permutation array */
-#define MAX 3
+#define MAX 6
 
 INT P[MAX];
 BOOL IsParity;
@@ -43,29 +43,37 @@ VOID Store( VOID )
 /* Build permutation function */
 VOID Go( INT Pos )
 {
-  INT i;
+  INT i, x;
+  BOOL SaveParity;
 
-  if (Pos == MAX - 1)
+  if (Pos == MAX)
     Store();
   else
   {
-    for (i = Pos; i < MAX; i++)
+    SaveParity = IsParity;
+    Go(Pos + 1);
+    for (i = Pos + 1; i < MAX; i++)
     {
-      Swap(&P[Pos], &P[i]);
+      /* Put in Pos element i*/
       if (Pos != i)
+      {
+        Swap(&P[Pos], &P[i]);
         IsParity = !IsParity;
+      }
       Go(Pos + 1);
-      Swap(&P[Pos], &P[i]);
-      if (Pos != i)
-        IsParity = !IsParity;
     }
+    x = P[Pos];
+    for (i = Pos + 1; i < MAX; i++)
+      P[i - 1] = P[i];
+    P[MAX - 1] = x;
+    IsParity = SaveParity;
   }
 } /* End of 'Go' function */
 
 /* Main program function */
 VOID main( VOID )
 {
-  INT i;
+  INT i, Pos = 0;
 
   for (i = 0; i < MAX; i++)
     P[i] = i + 1;
