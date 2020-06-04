@@ -1,4 +1,4 @@
-/* FILE NAME: T05DET.C
+/* FILE NAME: T06DETG.C
  * PROGRAMMER: EN5
  * DATE: 03.06.2020
  * PURPOSE: dertiminat gaus.
