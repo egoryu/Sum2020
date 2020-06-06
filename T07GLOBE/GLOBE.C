@@ -4,7 +4,6 @@
  * PURPOSE: draw 3D object.
  */
 #include <stdlib.h>
-#include <math.h>
 
 #include <windows.h>
 
@@ -12,45 +11,6 @@
 #include "timer.h"
 
 VEC Geom[GLOBE_H][GLOBE_W];
-
-/* Rotete Z axsis*/
-VEC RotateZ( VEC V, DBL alpha )
-{
-  VEC P;
-
-  alpha *= PI / 180;
-  P.X = V.X * cos(alpha) - V.Y * sin(alpha);
-  P.Y = V.X * sin(alpha) + V.Y * cos(alpha);
-  P.Z = V.Z;
-
-  return P;
-} /* End of 'RotateZ' function */
-
-/* Rotete Y axsis*/
-VEC RotateY( VEC V, DBL alpha )
-{
-  VEC P;
-
-  alpha *= PI / 180;
-  P.X = V.X * cos(alpha) - V.Z * sin(alpha);
-  P.Z = V.X * sin(alpha) + V.Z * cos(alpha);
-  P.Y = V.Y;
-
-  return P;
-} /* End of 'RotateY' function */
-
-/* Rotete X axsis*/
-VEC RotateX( VEC V, DBL alpha )
-{
-  VEC P;
-
-  alpha *= PI / 180;
-  P.Y = V.Y * cos(alpha) - V.Z * sin(alpha);
-  P.Z = V.Y * sin(alpha) + V.Z * cos(alpha);
-  P.X = V.X;
-
-  return P;
-} /* End of 'RotateX' function */
 
 /* Create globe function */
 VOID GlobeSet( DBL R )
@@ -75,16 +35,12 @@ VOID GlobeDraw( HDC hDC, DBL Xc, DBL Yc )
   static VEC Geom1[GLOBE_H][GLOBE_W];
   DBL t = GlobalTime;
 
+  /* Rotate globe */
   for (i = 0; i < GLOBE_H; i++)
     for (j = 0; j < GLOBE_W; j++)
-    {
-      VEC v, v1;
+      Geom1[i][j] = VecMulMatr(Geom[i][j], MatrMulMatr(MatrRotateY(t * 8), MatrRotateZ(t * 10)));
 
-      v1 = RotateY(Geom[i][j], t * 8);
-      v = RotateZ(v1, 10);
-      Geom1[i][j] = v;
-    }
-
+#if 0
   /* Draw pixel globe */
   SelectObject(hDC, GetStockObject(DC_PEN));
   SetDCPenColor(hDC, RGB(255, 0, 0));
@@ -93,7 +49,7 @@ VOID GlobeDraw( HDC hDC, DBL Xc, DBL Yc )
 
   for (i = 0; i < GLOBE_H; i++)
     for (j = 0; j < GLOBE_W; j++)
-      Ellipse(hDC, Geom1[i][j].X + Xc - s, Geom1[i][j].Y + Yc - s, Geom1[i][j].X + Xc + s, Geom1[i][j].Y + Yc + s);
+      Ellipse(hDC, (INT)(Geom1[i][j].X + Xc - s), (INT)(Geom1[i][j].Y + Yc - s), (INT)(Geom1[i][j].X + Xc + s), (INT)(Geom1[i][j].Y + Yc + s));
 
   /* Draw line globe */
   SelectObject(hDC, GetStockObject(DC_PEN));
@@ -102,18 +58,18 @@ VOID GlobeDraw( HDC hDC, DBL Xc, DBL Yc )
   /* vertical */
   for (j = 0; j < GLOBE_W; j++)
   {
-    MoveToEx(hDC, Geom1[0][j].X + Xc, Geom1[0][j].Y + Yc, NULL);
+    MoveToEx(hDC, (INT)(Geom1[0][j].X + Xc), (INT)(Geom1[0][j].Y + Yc), NULL);
     for (i = 1; i < GLOBE_H; i++)
-      LineTo(hDC, Geom1[i][j].X + Xc, Geom1[i][j].Y + Yc);
+      LineTo(hDC, (INT)(Geom1[i][j].X + Xc), (INT)(Geom1[i][j].Y + Yc));
   }
   /* gorizontal */
   for (j = 0; j < GLOBE_H; j++)
   {
-    MoveToEx(hDC, Geom1[j][0].X + Xc, Geom1[j][0].Y + Yc, NULL);
+    MoveToEx(hDC, (INT)(Geom1[j][0].X + Xc), (INT)(Geom1[j][0].Y + Yc), NULL);
     for (i = 1; i < GLOBE_W; i++)
-      LineTo(hDC, Geom1[j][i].X + Xc, Geom1[j][i].Y + Yc);
+      LineTo(hDC, (INT)(Geom1[j][i].X + Xc), (INT)(Geom1[j][i].Y + Yc));
   }
-
+#endif
   /* Draw poligon globe */
   srand(30);
   SelectObject(hDC, GetStockObject(DC_PEN));
@@ -122,8 +78,8 @@ VOID GlobeDraw( HDC hDC, DBL Xc, DBL Yc )
   for (i = 0; i < GLOBE_H - 1; i++)
     for (j = 0; j < GLOBE_W - 1; j++)
     {
-      POINT pnts[] = {{Geom1[i][j].X + Xc, Geom1[i][j].Y + Yc}, {Geom1[i + 1][j].X + Xc, Geom1[i + 1][j].Y + Yc},
-      {Geom1[i + 1][j + 1].X + Xc, Geom1[i + 1][j + 1].Y + Yc}, {Geom1[i][j + 1].X + Xc, Geom1[i][j + 1].Y + Yc}};
+      POINT pnts[] = {{(LONG)(Geom1[i][j].X + Xc), (LONG)(Geom1[i][j].Y + Yc)}, {(LONG)(Geom1[i + 1][j].X + Xc), (LONG)(Geom1[i + 1][j].Y + Yc)},
+      {(LONG)(Geom1[i + 1][j + 1].X + Xc), (LONG)(Geom1[i + 1][j + 1].Y + Yc)}, {(LONG)(Geom1[i][j + 1].X + Xc), (LONG)(Geom1[i][j + 1].Y + Yc)}};
 
       if ((pnts[0].x - pnts[1].x) * (pnts[0].y + pnts[1].y) +
           (pnts[1].x - pnts[2].x) * (pnts[1].y + pnts[2].y) +

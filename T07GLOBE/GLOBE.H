@@ -4,17 +4,10 @@
  * PURPOSE: draw 3D object.
  */
 
-#define PI 3.14159265358979323846
+#include "mth.h"
 
-#define GLOBE_W 15
-#define GLOBE_H 15
-
-typedef double DBL;
-
-typedef struct tagVEC
-{
-  DBL X, Y, Z;
-} VEC;
+#define GLOBE_W 30
+#define GLOBE_H 30
 
 VOID GlobeSet( DBL R );
 VOID GlobeDraw( HDC hDC, DBL Xc, DBL Yc );

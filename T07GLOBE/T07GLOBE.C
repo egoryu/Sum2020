@@ -116,7 +116,7 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
              OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY,
              FF_SWISS | VARIABLE_PITCH, "Consolas");
     hFntOld = SelectObject(hMemDC, hFnt);
-    len = wsprintf(Buf, "%02i.%02i.%i\n(%s)     (FPS: %d)",
+    len = wsprintf(Buf, "%02i.%02i.%i\n(%s)     (FPS: %i)",
             st.wDay, st.wMonth, st.wYear, WD[st.wDayOfWeek], (INT)FPS);
 
     SetBkMode(hMemDC, TRANSPARENT);
