@@ -142,14 +142,40 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World );
  *   - centr coordinate:
  *       VEC C.
  *   - radius
- *       DBL R.
+ *       DBL RX, RY, RZ.
  *   - number of segments.
  *       INT SplitW, INT SplitH
  * RETURNS:
  *   (BOOL) work.
  */
-BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL R, INT SplitW, INT SplitH );
+BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT SplitW, INT SplitH );
 
-#endif /* __DEF_H_ */
+/* Create prim of top function 
+ * ARGUMENTS:
+ *   - prim struct:
+ *       en5PRIM *Pr.
+ *   - centr coordinate:
+ *       VEC C.
+ *   - radius
+ *       DBL RX, r.
+ *   - number of segments.
+ *       INT SplitW, INT SplitH
+ * RETURNS:
+ *   (BOOL) work.
+ */
+BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL RX, DBL r, INT SplitW, INT SplitH );
+
+/* Load primitive from '*.OBJ' file function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       vg4PRIM *Pr;
+ *   - '*.OBJ' file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName );
+
+#endif /* __RND_H_ */
 
 /* END OF 'RND.H' FILE */

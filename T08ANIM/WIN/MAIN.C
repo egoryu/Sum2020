@@ -3,10 +3,11 @@
  * DATE: 06.06.2020
  * PURPOSE: 3D animation project.
  */
-#include <time.h>
+#include <stdio.h>
 
 #include "../def.h"
 #include "../anim/rnd/rnd.h"
+#include "../anim/timer.h"
 
 /* My window class */
 #define WND_CLASS_NAME "My window class"
@@ -32,11 +33,13 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
   MSG msg;
   WNDCLASS wc;
 
+  SetDbgMemHooks();
+
   wc.style = CS_VREDRAW | CS_HREDRAW;
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-  wc.hCursor = LoadIcon(NULL, IDI_HAND);
+  wc.hCursor = LoadCursor(NULL, IDC_ARROW);
   wc.hIcon = LoadIcon(NULL, IDI_ASTERISK);
   wc.lpszMenuName = NULL;
   wc.hInstance = hInstance;
@@ -85,7 +88,11 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
   HDC hDC;
   PAINTSTRUCT ps;
-  static en5PRIM Pr;
+  static en5PRIM Pr, Cow;
+  CHAR Buf[20];
+  INT Angle = 90;
+  VEC v = VecSet(0, -1, 0);
+  MATR m;
 
   switch (Msg)
   {
@@ -95,15 +102,29 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_CREATE:
     EN5_RndInit(hWnd);
-    EN5_RndPrimCreateSphere(&Pr, VecSet(1, 1, 0), 2, 30, 30);
+    TimerInit();
+    EN5_RndPrimCreateTop(&Pr, VecSet(0, 0, 0), 3, 1, 30, 30);
+    EN5_RndPrimLoad(&Cow, "cow.obj");
 
     SetTimer(hWnd, 30, 1, NULL);
     return 0;
   case WM_TIMER:
     EN5_RndStart();
-    EN5_RndPrimDraw(&Pr, MatrRotateY(30 * clock() / 1000.0));
+    TimerResponse();
+    EN5_RndPrimDraw(&Pr, MatrMulMatr3(MatrTranslate(VecSet(5, 0, 0)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime)));
+
+    if (sin(GlobalTime * 5) <= 0)
+      Angle = 270;
+    else if (sin(GlobalTime * 5) > 0)
+      Angle = 90;
+
+    v = VecMulMatr(v, MatrMulMatr(MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime)));
+    v = VecMulNum(v, sin(GlobalTime * 5) * 5);
+    EN5_RndPrimDraw(&Cow, MatrMulMatr6(MatrRotateZ(Angle), MatrTranslate(VecSet(10, 0, 0)), MatrScale(VecSet(0.5, 0.5, 0.5)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime), MatrTranslate(v)));
+
     EN5_RndEnd();
     hDC = GetDC(hWnd);
+    TextOut(EN5_hRndDCFrame, 0, 0, Buf, sprintf(Buf, "FPS:%f", FPS));
     EN5_RndCopyFrame(hDC);
 
     InvalidateRect(hWnd, NULL, FALSE);
@@ -131,6 +152,7 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_DESTROY:
     EN5_RndPrimFree(&Pr);
+    EN5_RndPrimFree(&Cow);
     EN5_RndClose();
     KillTimer(hWnd, 30);
     PostMessage(hWnd, WM_QUIT, 0, 0);

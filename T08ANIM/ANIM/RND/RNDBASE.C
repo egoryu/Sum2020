@@ -33,7 +33,7 @@ VOID EN5_RndInit( HWND hWnd )
   EN5_RndProjFarClip = 300;
 
   EN5_RndProjSet();
-  EN5_RndCamSet(VecSet(4, 4, 4), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  EN5_RndCamSet(VecSet(5, 9, 17), VecSet(0, 0, 0), VecSet(0, 1, 0));
 } /* End of 'EN5_RndInit' function */
 
 /* Render systen initialization function.

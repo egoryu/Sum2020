@@ -21,6 +21,7 @@
 #define MatrMulMatr3(A, B, C) (MatrMulMatr(MatrMulMatr(A, B), C))
 #define MatrMulMatr4(A, B, C, D) (MatrMulMatr3(MatrMulMatr(A, B), C, D))
 #define MatrMulMatr5(A, B, C, D, E) (MatrMulMatr4(MatrMulMatr(A, B), C, D, E))
+#define MatrMulMatr6(A, B, C, D, E, F) (MatrMulMatr5(MatrMulMatr(A, B), C, D, E, F))
 
 /* Base float point types */
 typedef double DBL;
@@ -637,7 +638,6 @@ __inline MATR MatrView( VEC Loc, VEC At, VEC Up1 )
       {-VecDotVec(Loc, Right), -VecDotVec(Loc, Up), VecDotVec(Loc, Dir), 1}
     }
   };
-
   return m;
 } /* End of 'MatrView' function */
 
