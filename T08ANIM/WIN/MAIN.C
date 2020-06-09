@@ -59,6 +59,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
   ShowWindow(hWnd, SW_SHOWNORMAL);
 
   EN5_AnimUnitAdd(EN5_UnitCreateBall());
+  EN5_AnimUnitAdd(EN5_UnitCreateCow());
   EN5_AnimUnitAdd(EN5_UnitCreateControl());
 
   while (TRUE)

@@ -26,6 +26,13 @@ en5UNIT * EN5_UnitCreateBall( VOID );
  */
 en5UNIT * EN5_UnitCreateControl( VOID );
 
+/* Unit ball creation function.
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (en5UNIT *) pointer to created unit.
+ */
+en5UNIT * EN5_UnitCreateCow( VOID );
+
 #endif /* __UNITS_H_ */
 
 /* END OF 'UNITS.H' FILE */

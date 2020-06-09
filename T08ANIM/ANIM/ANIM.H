@@ -10,6 +10,9 @@
 #include "../def.h"
 #include "RND/rnd.h"
 
+#include <mmsystem.h>
+#pragma comment(lib, "winmm")
+
 #define EN5_MAX_UNITS 1000
 #define UNIT_BASE_FIELDS \
   VOID (*Init)( en5UNIT *Uni, en5ANIM *Ani );      \
@@ -53,6 +56,12 @@ struct tagen5ANIM
   INT
     Mx, My, Mz,                  /* Absolute mouse coordinates */
     Mdx, Mdy, Mdz;               /* Relative mouse coordinates */
+
+  BYTE
+    JBut[32], JButOld[32], JButClick[32]; /* Joystick button states */
+  INT JPov;                               /* Joystick point-of-view control [-1,0..7] */
+  DBL
+    JX, JY, JZ, JR;                       /* Joystick axes */
 };
 
 extern en5ANIM EN5_Anim;

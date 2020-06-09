@@ -250,6 +250,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\U_COW.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\U_CTRL.C"
 					>
 				</File>

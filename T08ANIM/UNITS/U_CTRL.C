@@ -83,7 +83,7 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
   TextOut(Ani->hDC, 0, 0, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
 } /* End of 'EN5_UnitResponse' function */
 
-/* Unit render function.
+/* U  nit render function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
  *       en5UNIT_CTRL *Uni;
