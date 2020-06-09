@@ -7,9 +7,9 @@
 
 #include "rnd.h"
 
-/* Render systen initialization function.
+/* Render system close function.
  * ARGUMENTS:
- *   - HWND:
+ *   - window handle:
  *       HWND hWnd;
  * RETURNS: None.
  */
@@ -33,7 +33,7 @@ VOID EN5_RndInit( HWND hWnd )
   EN5_RndProjFarClip = 300;
 
   EN5_RndProjSet();
-  EN5_RndCamSet(VecSet(5, 9, 17), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  EN5_RndCamSet(VecSet(3, 3, 3), VecSet(0, 0, 0), VecSet(0, 1, 0));
 } /* End of 'EN5_RndInit' function */
 
 /* Render systen initialization function.
@@ -71,9 +71,9 @@ VOID EN5_RndResize( INT W, INT H )
   EN5_RndProjSet();
 } /* End of 'EN5_RndResize' function */
 
-/* Change window size function.
+/* Copy frame function.
  * ARGUMENTS:
- *   - window:
+ *   - window context:
  *       HDC hDC.
  * RETURNS: None.
  */
@@ -90,8 +90,8 @@ VOID EN5_RndStart( VOID )
 {
   SelectObject(EN5_hRndDCFrame, GetStockObject(NULL_PEN));
   SelectObject(EN5_hRndDCFrame, GetStockObject(WHITE_BRUSH));
-  //SetDCBrushColor(EN5_hRndDCFrame, RGB(20, 100, 50));
   Rectangle(EN5_hRndDCFrame, 0, 0, EN5_RndFrameW + 1, EN5_RndFrameH + 1);
+  SelectObject(EN5_hRndDCFrame, GetStockObject(BLACK_PEN));
 } /* End of 'EN5_RndStart' function */
 
 /* End draw function 

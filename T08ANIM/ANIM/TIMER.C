@@ -1,68 +1,72 @@
-/* FILE NAME: TIMER.C
- * PROGRAMMER: EN5
- * DATE: 04.06.2020
- * PURPOSE: draw 3D object.
+/* FILE NAME  : TIMER.C
+ * PROGRAMMER : EN5
+ * LAST UPDATE: 08.01.2020
+ * PURPOSE    : Simple WinAPI animation project.
+ *              Timer implementation module.
  */
 
-#include <time.h>
-
-#include "timer.h"
-
-/* Timer global data */
-DOUBLE
-  GlobalTime,
-  GlobalDeltaTime,
-  FPS;
-BOOL
-  IsPause;
+#include "anim.h"
 
 /* Timer local data */
-static LONG
-  StartTime,
-  OldTime,
-  PauseTime,
-  OldFPSTime,
-  FrameCount;
+static UINT64
+  StartTime,    /* Start program time */
+  OldTime,      /* Previous frame time */
+  OldTimeFPS,   /* Old time FPS measurement */
+  PauseTime,    /* Time during pause period */
+  TimePerSec,   /* Timer resolution */
+  FrameCounter; /* Frames counter */
 
 /* Timer initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.
  */
-VOID TimerInit( VOID )
+VOID EN5_TimerInit( VOID )
 {
-  StartTime = OldTime = OldFPSTime = clock();
+  LARGE_INTEGER t;
+
+  QueryPerformanceFrequency(&t);
+  TimePerSec = t.QuadPart;
+  QueryPerformanceCounter(&t);
+  StartTime = OldTime = OldTimeFPS = t.QuadPart;
+  FrameCounter = 0;
+  EN5_Anim.IsPause = FALSE;
+  EN5_Anim.FPS = 30.0;
   PauseTime = 0;
-  FrameCount = 0;
-  IsPause = FALSE;
-} /* End of 'TimerInit' function */
+} /* End of 'EN5_TimerInit' function */
 
 /* Timer interframe response function.
  * ARGUMENTS: None.
  * RETURNS: None.
  */
-VOID TimerResponse( VOID )
+VOID EN5_TimerResponse( VOID )
 {
-  LONG t = clock();
+  LARGE_INTEGER t;
 
-  if (!IsPause)
+  QueryPerformanceCounter(&t);
+  /* Global time */
+  EN5_Anim.GlobalTime = (DBL)(t.QuadPart - StartTime) / TimePerSec;
+  EN5_Anim.GlobalDeltaTime = (DBL)(t.QuadPart - OldTime) / TimePerSec;
+
+  /* Time with pause */
+  if (EN5_Anim.IsPause)
   {
-    GlobalTime = (DOUBLE)(t - PauseTime - StartTime) / CLOCKS_PER_SEC;
-    GlobalDeltaTime = (DOUBLE)(t - OldTime) / CLOCKS_PER_SEC;
+    EN5_Anim.DeltaTime = 0;
+    PauseTime += t.QuadPart - OldTime;
   }
   else
   {
-    PauseTime += t - OldTime;
-    GlobalDeltaTime = 0;
+    EN5_Anim.DeltaTime = EN5_Anim.GlobalDeltaTime;
+    EN5_Anim.Time = (DBL)(t.QuadPart - PauseTime - StartTime) / TimePerSec;
   }
-
-  FrameCount++;
-  if (t - OldFPSTime > CLOCKS_PER_SEC)
+  /* FPS */
+  FrameCounter++;
+  if (t.QuadPart - OldTimeFPS > TimePerSec)
   {
-    FPS = FrameCount / ((DOUBLE)(t - OldFPSTime) / CLOCKS_PER_SEC);
-    OldFPSTime = t;
-    FrameCount = 0;
+    EN5_Anim.FPS = FrameCounter * TimePerSec / (DBL)(t.QuadPart - OldTimeFPS);
+    OldTimeFPS = t.QuadPart;
+    FrameCounter = 0;
   }
-  OldTime = t;
-} /* End of 'TimerResponse' function */
+  OldTime = t.QuadPart;
+} /* End of 'EN5_TimerResponse' function */
 
 /* END OF 'TIMER.C' FILE */

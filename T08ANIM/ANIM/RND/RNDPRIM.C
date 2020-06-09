@@ -78,7 +78,6 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
     pnts[i].y = (INT)((-p.Y + 1) * EN5_RndFrameH / 2);
   }
 
-  SelectObject(EN5_hRndDCFrame, GetStockObject(BLACK_PEN));
   /* Draw triangles */
   for (i = 0; i < Pr->NumOfI; i += 3)
   {
@@ -115,9 +114,9 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
   /* Build vertex array */
   for (theta = 0, i = 0, k = 0; i < SplitH; i++, theta += PI / (SplitH - 1))
     for (phi = 0, j = 0; j < SplitW; j++, phi += 2 * PI / (SplitW - 1))
-      Pr->V[k++].P = VecSet(C.X + RX * sin(phi) * sin(theta),
-                            C.Y + RY * cos(phi),
-                            C.Z + RZ * cos(phi) * sin(theta));
+      Pr->V[k++].P = VecSet(C.X + RX * cos(phi) * sin(theta),
+                            C.Y + RY * cos(theta),
+                            C.Z + RZ * sin(phi) * sin(theta));
 
   /* Build index array */
   for (i = 0, k = 0, f = 0; i < SplitH - 1; i++, k++)

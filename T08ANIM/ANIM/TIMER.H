@@ -9,25 +9,6 @@
 
 #include "../def.h"
 
-extern DOUBLE
-  GlobalTime,
-  GlobalDeltaTime,
-  FPS;
-extern BOOL
-  IsPause;
-
-/* Timer initialization function.
- * ARGUMENTS: None.
- * RETURNS: None.
- */
-VOID TimerInit( VOID );
-
-/* Timer interframe response function.
- * ARGUMENTS: None.
- * RETURNS: None.
- */
-VOID TimerResponse( VOID );
-
 #endif /* __TIMER_H_ */
 
 /* END OF 'TIMER.H' FILE */

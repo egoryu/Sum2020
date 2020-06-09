@@ -3,14 +3,14 @@
  * DATE: 06.06.2020
  * PURPOSE: 3D animation project.
  */
-#include <stdio.h>
 
-#include "../def.h"
-#include "../anim/rnd/rnd.h"
-#include "../anim/timer.h"
+#include "../units/units.h"
 
 /* My window class */
 #define WND_CLASS_NAME "My window class"
+
+/* Global mouse context */
+INT EN5_MouseWheel;
 
 LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
@@ -58,11 +58,15 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
 
+  EN5_AnimUnitAdd(EN5_UnitCreateBall());
+  EN5_AnimUnitAdd(EN5_UnitCreateControl());
+
   while (TRUE)
   if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
   {
     if (msg.message == WM_QUIT)
       break;
+    TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
   else
@@ -88,11 +92,6 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
   HDC hDC;
   PAINTSTRUCT ps;
-  static en5PRIM Pr, Cow;
-  CHAR Buf[20];
-  INT Angle = 90;
-  VEC v = VecSet(0, -1, 0);
-  MATR m;
 
   switch (Msg)
   {
@@ -101,16 +100,14 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       GetSystemMetrics(SM_CYMAXTRACK) + GetSystemMetrics(SM_CYCAPTION) + 2 * GetSystemMetrics(SM_CYBORDER);
     return 0;
   case WM_CREATE:
-    EN5_RndInit(hWnd);
-    TimerInit();
-    EN5_RndPrimCreateTop(&Pr, VecSet(0, 0, 0), 3, 1, 30, 30);
-    EN5_RndPrimLoad(&Cow, "cow.obj");
+    EN5_AnimInit(hWnd);
 
     SetTimer(hWnd, 30, 1, NULL);
     return 0;
   case WM_TIMER:
-    EN5_RndStart();
-    TimerResponse();
+    hDC = GetDC(hWnd);
+    EN5_AnimRender();
+    /*
     EN5_RndPrimDraw(&Pr, MatrMulMatr3(MatrTranslate(VecSet(5, 0, 0)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime)));
 
     if (sin(GlobalTime * 5) <= 0)
@@ -121,18 +118,14 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     v = VecMulMatr(v, MatrMulMatr(MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime)));
     v = VecMulNum(v, sin(GlobalTime * 5) * 5);
     EN5_RndPrimDraw(&Cow, MatrMulMatr6(MatrRotateZ(Angle), MatrTranslate(VecSet(10, 0, 0)), MatrScale(VecSet(0.5, 0.5, 0.5)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime), MatrTranslate(v)));
-
-    EN5_RndEnd();
-    hDC = GetDC(hWnd);
-    TextOut(EN5_hRndDCFrame, 0, 0, Buf, sprintf(Buf, "FPS:%f", FPS));
-    EN5_RndCopyFrame(hDC);
+    */
 
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;
   case WM_ERASEBKGND:
     return 1;
   case WM_SIZE:
-    EN5_RndResize(LOWORD(lParam), HIWORD(lParam));
+    EN5_AnimResize(LOWORD(lParam), HIWORD(lParam));
 
     SendMessage(hWnd, WM_TIMER, 0, 0);
     return 0;
@@ -140,9 +133,18 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     if (wParam == VK_ESCAPE)
       SendMessage(hWnd, WM_CLOSE, 0, 0);
     return 0;
+  case WM_LBUTTONDOWN:
+    SetCapture(hWnd);
+    return 0;
+  case WM_LBUTTONUP:
+    ReleaseCapture();
+    return 0;
+  case WM_MOUSEWHEEL:
+    EN5_MouseWheel += (SHORT)HIWORD(wParam);
+    return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-    EN5_RndCopyFrame(hDC);
+    EN5_AnimCopyFrame(hDC);
     EndPaint(hWnd, &ps);
     return 0;
   case WM_CLOSE:
@@ -151,9 +153,7 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       DestroyWindow(hWnd);
     return 0;
   case WM_DESTROY:
-    EN5_RndPrimFree(&Pr);
-    EN5_RndPrimFree(&Cow);
-    EN5_RndClose();
+    EN5_AnimClose();
     KillTimer(hWnd, 30);
     PostMessage(hWnd, WM_QUIT, 0, 0);
     return 0;

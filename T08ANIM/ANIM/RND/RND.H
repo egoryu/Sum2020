@@ -45,7 +45,7 @@ typedef struct tagen5PRIM
   MATR Trans;   /* Additional transformation matrix */
 } en5PRIM;
 
-/* Render systen initialization function.
+/* Render system initialization function.
  * ARGUMENTS:
  *   - HWND:
  *       HWND hWnd;
@@ -53,7 +53,7 @@ typedef struct tagen5PRIM
  */
 VOID EN5_RndInit( HWND hWnd );
 
-/* Render systen initialization function.
+/* Render system close function.
  * ARGUMENTS: None.
  * RETURNS: None.
  */
@@ -67,9 +67,9 @@ VOID EN5_RndClose( VOID );
  */
 VOID EN5_RndResize( INT W, INT H );
 
-/* Change window size function.
+/* Copy frame function.
  * ARGUMENTS:
- *   - window:
+ *   - window context:
  *       HDC hDC.
  * RETURNS: None.
  */
