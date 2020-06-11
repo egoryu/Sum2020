@@ -87,7 +87,7 @@ VOID EN5_RndPrimFree( en5PRIM *Pr )
   glBindVertexArray(0);
   glDeleteVertexArrays(1, &Pr->VA);
 
-  glDeleteVertexArrays(1, &Pr->IBuf);
+  glDeleteBuffers(1, &Pr->IBuf);
   memset(Pr, 0, sizeof(en5PRIM));
 } /* End of 'EN5_RndPrimFree' function */
 
@@ -170,6 +170,7 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
     }
 
   EN5_RndPrimCreate(Pr, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
+  free(V);
   return TRUE;
 } /* End of 'EN5_RndPrimCreateSphere' function */
 
@@ -223,6 +224,7 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL R, DBL r, INT SplitW, INT Spl
     }
 
   EN5_RndPrimCreate(Pr, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
+  free(V);
   return TRUE;
 } /* End of 'EN5_RndPrimCreateSphere' function */
 
