@@ -34,19 +34,22 @@ extern MATR
 typedef struct tagen5VERTEX
 {
   VEC P;  /* Vertex position */
+  VEC2 T; /* Vertex texture coordinate */
+  VEC N;  /* Vertex normal position */
+  VEC4 C; /* color */
 } en5VERTEX;
 
-/* primitiv type */
+/* Primitive representation type */
 typedef struct tagen5PRIM
 {
-  en5VERTEX *V; /* Vertex attributes array */
-  INT NumOfV;   /* Number of vertices */
-
-  INT *I;       /* Index array (for trimesh – by 3 ones) */
-  INT NumOfI;   /* Number of indices */
-
-  MATR Trans;   /* Additional transformation matrix */
+  INT
+    VA,              /* OpenGL vertex array identifier */
+    VBuf,            /* OpenGL vertex buffer identifier */
+    IBuf;            /* OpenGL index buffer identifier */
+  INT NumOfElements; /* Number of vertices or indices */
+  MATR Trans;        /* Additional transformation matrix */
 } en5PRIM;
+
 
 /* Render system initialization function.
  * ARGUMENTS:
@@ -106,16 +109,19 @@ VOID EN5_RndCamSet( VEC Loc, VEC At, VEC Up );
 
 /* Create primitive function.
  * ARGUMENTS:
- *   - primitive:
- *       en5PRIM *Pr.
- *   - number of vertices:
- *       INT NoofV.
- *   - number of index:
- *       INT NoofI.
- * RETURNS:
- *   (BOOL) work.
+ *   - pointer to primitive to create:
+ *       en5PRIM *Pr;
+ *   - new primitive vertex array:
+ *       en5VERTEX *V;
+ *   - new primitive vertex array size:
+ *       INT NoofV;
+ *   - new primitive index array:
+ *       INT *I;
+ *   - new primitive index array size:
+ *       INT NoofI;
+ * RETURNS: None.
  */
-BOOL EN5_RndPrimCreate( en5PRIM *Pr, INT NoofV, INT NoofI );
+VOID EN5_RndPrimCreate( en5PRIM *Pr, en5VERTEX *V, INT NoofV, INT *I, INT NoofI );
 
 /* Delete primitive function.
  * ARGUMENTS:

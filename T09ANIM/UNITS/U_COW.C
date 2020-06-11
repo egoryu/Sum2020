@@ -37,7 +37,7 @@ static VOID EN5_UnitClose( en5UNIT_COW *Uni, en5ANIM *Ani )
 static VOID EN5_UnitInit( en5UNIT_COW *Uni, en5ANIM *Ani )
 {
   Uni->Pos = VecSet(0, 1, 0);
-  EN5_RndPrimLoad(&Uni->Ball, "cow.obj");
+  EN5_RndPrimLoad(&Uni->Ball, "ultimate building.obj");
 } /* End of 'EN5_UnitInit' function */
 /* Bounce ball unit inter frame events handle function.
  * ARGUMENTS:
@@ -61,7 +61,7 @@ static VOID EN5_UnitResponse( en5UNIT_COW *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_COW *Uni, en5ANIM *Ani )
 {
-  EN5_RndPrimDraw(&Uni->Ball, MatrMulMatr3(MatrScale(VecSet(0.5, 0.5, 0.5)), MatrTranslate(VecSet(1, 0, 1)), MatrRotateX(30 * sin(EN5_Anim.Time * 8))));
+  EN5_RndPrimDraw(&Uni->Ball, MatrMulMatr3(MatrScale(VecSet(0.001, 0.001, 0.001)), MatrTranslate(VecSet(1, 0, 1)), MatrRotateX(0 * sin(EN5_Anim.Time * 8))));
 } /* End of 'EN5_UnitRender' function */
 
 /* Unit ball creation function.

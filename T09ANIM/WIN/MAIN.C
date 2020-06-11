@@ -61,7 +61,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
   EN5_AnimUnitAdd(EN5_UnitCreateBall());
   EN5_AnimUnitAdd(EN5_UnitCreateCow());
   EN5_AnimUnitAdd(EN5_UnitCreateControl());
-
+  
   while (TRUE)
   if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
   {
@@ -121,7 +121,8 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     EN5_RndPrimDraw(&Cow, MatrMulMatr6(MatrRotateZ(Angle), MatrTranslate(VecSet(10, 0, 0)), MatrScale(VecSet(0.5, 0.5, 0.5)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime), MatrTranslate(v)));
     */
 
-    InvalidateRect(hWnd, NULL, FALSE);
+    EN5_AnimCopyFrame();
+    ReleaseDC(hWnd, hDC);
     return 0;
   case WM_ERASEBKGND:
     return 1;

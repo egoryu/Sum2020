@@ -33,6 +33,17 @@ typedef struct tagVEC
   FLT X, Y, Z; /* Vector coordinates */
 } VEC;
 
+/* New geom type */
+typedef struct tagVEC2
+{
+  FLT X, Y; /* Coordinates */
+} VEC2;
+
+typedef struct tagVEC4
+{
+  FLT X, Y, Z, W; /* Vector coordinates */
+} VEC4;
+
 /* matrix type */
 typedef struct tagMATR
 {
@@ -66,6 +77,57 @@ __inline VOID Swap1( FLT *a, FLT *b )
   *b = tmp;
 } /* End of 'Swap1' function */
 
+/* Create vectors with one coordinate function.
+ * ARGUMENTS:
+ *   - Vector coordinate:
+ *       FLT X;
+ * RETURNS:
+ *   (VEC) result vector.
+ */
+__inline VEC VecSet1( FLT X )
+{
+  VEC v;
+
+  v.X = X;
+  v.Y = X;
+  v.Z = X;
+  return v;
+} /* End of 'VecSet1' function */
+
+/* Create 2D vectors with one coordinate function.
+ * ARGUMENTS:
+ *   - Vector coordinate:
+ *       FLT X;
+ * RETURNS:
+ *   (VEC2) result vector.
+ */
+__inline VEC2 Vec2Set1( FLT X )
+{
+  VEC2 v;
+
+  v.X = X;
+  v.Y = X;
+  return v;
+} /* End of 'Vec2Set1' function */
+
+/* Create 4D vectors with one coordinate function.
+ * ARGUMENTS:
+ *   - Vector coordinate:
+ *       FLT X;
+ * RETURNS:
+ *   (VEC4) result vector.
+ */
+__inline VEC4 Vec4Set1( FLT X )
+{
+  VEC4 v;
+
+  v.X = X;
+  v.Y = X;
+  v.Z = X;
+  v.W = X;
+  return v;
+} /* End of 'Vec4Set1' function */
+
 /* Create vectors function.
  * ARGUMENTS:
  *   - Vector coordinates:
@@ -82,6 +144,40 @@ __inline VEC VecSet( FLT X, FLT Y, FLT Z )
   v.Z = Z;
   return v;
 } /* End of 'VecSet' function */
+
+/* Create 2D vectors function.
+ * ARGUMENTS:
+ *   - Vector coordinates:
+ *       FLT X, Y;
+ * RETURNS:
+ *   (VEC2) result vector.
+ */
+__inline VEC2 Vec2Set( FLT X, FLT Y )
+{
+  VEC2 v;
+
+  v.X = X;
+  v.Y = Y;
+  return v;
+} /* End of 'Vec2Set' function */
+
+/* Create 4D vectors function.
+ * ARGUMENTS:
+ *   - Vector coordinates:
+ *       FLT X, Y, Z, W;
+ * RETURNS:
+ *   (VEC4) result vector.
+ */
+__inline VEC4 Vec4Set( FLT X, FLT Y, FLT Z, FLT W )
+{
+  VEC4 v;
+
+  v.X = X;
+  v.Y = Y;
+  v.Z = Z;
+  v.Z = W;
+  return v;
+} /* End of 'Vec4Set' function */
 
 /* Add two vectors function.
  * ARGUMENTS:
