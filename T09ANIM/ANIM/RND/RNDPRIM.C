@@ -24,7 +24,7 @@
  *       INT NoofI;
  * RETURNS: None.
  */
-VOID EN5_RndPrimCreate( en5PRIM *Pr, en5VERTEX *V, INT NoofV, INT *I, INT NoofI )
+VOID EN5_RndPrimCreate( en5PRIM *Pr, en5PRIM_TYPE Type, en5VERTEX *V, INT NoofV, INT *I, INT NoofI )
 {
   memset(Pr, 0, sizeof(en5PRIM));
 
@@ -70,6 +70,7 @@ VOID EN5_RndPrimCreate( en5PRIM *Pr, en5VERTEX *V, INT NoofV, INT *I, INT NoofI 
     Pr->NumOfElements = NoofI;
   }
 
+  Pr->Type = Type;
   Pr->Trans = MatrIdentity();
 } /* End of 'EN5_RndPrimCreate' function */
 
@@ -104,6 +105,10 @@ VOID EN5_RndPrimFree( en5PRIM *Pr )
 VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
 {
   MATR wvp = MatrMulMatr3(Pr->Trans, World, EN5_RndMatrVP);
+  INT gl_prim_type = Pr->Type == EN5_RND_PRIM_LINES ? GL_LINES :
+                   Pr->Type == EN5_RND_PRIM_TRIMESH ? GL_TRIANGLES :
+                   Pr->Type == EN5_RND_PRIM_TRISTRIP ? GL_TRIANGLE_STRIP :
+                   GL_POINTS;
   INT loc;
 
   /* Send matrix to OpenGL /v.1.0 */
@@ -121,10 +126,10 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
   if (Pr->IBuf != 0)
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
-    glDrawElements(GL_TRIANGLES, Pr->NumOfElements, GL_UNSIGNED_INT, NULL);
+    glDrawElements(gl_prim_type, Pr->NumOfElements, GL_UNSIGNED_INT, NULL);
   }
   else
-    glDrawArrays(GL_TRIANGLES, 0, Pr->NumOfElements);
+    glDrawArrays(gl_prim_type, 0, Pr->NumOfElements);
   glBindVertexArray(0);
   glUseProgram(0);
 } /* End of 'EN5_RndPrimDraw' function */
@@ -159,9 +164,20 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
   /* Build vertex array */
   for (theta = 0, i = 0, k = 0; i < SplitH; i++, theta += PI / (SplitH - 1))
     for (phi = 0, j = 0; j < SplitW; j++, phi += 2 * PI / (SplitW - 1))
-      V[k++].P = VecSet(C.X + RX * cos(phi) * sin(theta),
-                            C.Y + RY * cos(theta),
-                            C.Z + RZ * sin(phi) * sin(theta));
+    {
+      FLT
+        x = sin(phi) * sin(theta),
+        y = cos(theta),
+        z = cos(phi) * sin(theta);
+
+      V[k].P = VecSet(C.X + RX * x, C.Y + RY * y, C.Z + RZ * z);
+
+      V[k].N = VecSet(x, y, z);
+
+      V[k].C = Vec4Set(0.8, 0.3, 0.26, 1);
+
+      k++;
+    }
 
   /* Build index array */
   for (i = 0, k = 0, f = 0; i < SplitH - 1; i++, k++)
@@ -178,7 +194,7 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
       Ind[f++] = k + SplitW + 1;
     }
 
-  EN5_RndPrimCreate(Pr, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
+  EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRIMESH, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
   free(V);
   return TRUE;
 } /* End of 'EN5_RndPrimCreateSphere' function */
@@ -213,9 +229,18 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL R, DBL r, INT SplitW, INT Spl
   /* Build vertex array */
   for (theta = 0, i = 0, k = 0; i < SplitH; i++, theta += 2 * PI / (SplitH - 1))
     for (phi = 0, j = 0; j < SplitW; j++, phi += 2 * PI / (SplitW - 1))
-      V[k++].P = VecSet(C.X + (R + r * cos(theta)) * cos(phi),
-                            C.Y + r * sin(theta),
-                            C.Z + (R + r * cos(theta)) * sin(phi));
+    {
+      V[k].P = VecSet(C.X + (R + r * cos(theta)) * cos(phi),
+                      C.Y + r * sin(theta),
+                      C.Z + (R + r * cos(theta)) * sin(phi));
+      V[k].N = VecSet((R + r * cos(theta)) * cos(phi),
+                      r * sin(theta),
+                      (R + r * cos(theta)) * sin(phi));
+
+      V[k].C = Vec4Set(0.8, 0.3, 0.26, 1);
+
+      k++;
+    }
 
   /* Build index array */
   for (i = 0, k = 0, f = 0; i < SplitH - 1; i++, k++)
@@ -232,7 +257,7 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL R, DBL r, INT SplitW, INT Spl
       Ind[f++] = k + SplitW + 1;
     }
 
-  EN5_RndPrimCreate(Pr, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
+  EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRIMESH, V, SplitW * SplitH, Ind, (SplitW - 1) * (SplitH - 1) * 2 * 3);
   free(V);
   return TRUE;
 } /* End of 'EN5_RndPrimCreateSphere' function */
@@ -252,7 +277,7 @@ BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName )
   FILE *F;
   CHAR Buf[1000];
   en5VERTEX *V;
-  INT *Ind, size;
+  INT *Ind, size, i;
 
   memset(Pr, 0, sizeof(en5PRIM));
   if ((F = fopen(FileName, "r")) == NULL)
@@ -298,11 +323,102 @@ BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName )
       Ind[fn++] = n3 - 1;
     }
   }
-  EN5_RndPrimCreate(Pr, V, vn, Ind, fn);
+
+  /* Calculet normal */
+  for (i = 0; i < vn; i++)
+    V[i].N = VecSet(0, 0, 0);
+
+  for (i = 0; i < fn; i += 3)
+  {
+    VEC P0 = V[Ind[i]].P,
+        P1 = V[Ind[i + 1]].P,
+        P2 = V[Ind[i + 2]].P,
+        N = VecNormalize(VecCrossVec(VecSubVec(P1, P0), VecSubVec(P0, P2)));
+    V[Ind[i]].N = VecAddVec(V[Ind[i]].N, N);
+    V[Ind[i + 1]].N = VecAddVec(V[Ind[i + 1]].N, N);
+    V[Ind[i + 2]].N = VecAddVec(V[Ind[i + 2]].N, N);
+  }
+  for (i = 0; i < vn; i++)
+  {
+    V[i].N = VecNormalize(V[i].N);
+    V[i].C = Vec4Set(0.50 * 8, 0.8 * 8, 0.18 * 8, 1);
+  }
+
+  EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRIMESH, V, vn, Ind, fn);
 
   fclose(F);
   free(V);
   return TRUE;
 } /* End of 'EN5_RndPrimLoad' function */
+
+/* Create grid primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       en5PRIM *Pr;
+ *   - new primitive vertex array:
+ *       en5VERTEX *V;
+ *   - size of grid:
+ *       INT W, H;
+ *   - need or nor normolize:
+ *       BOOL NeedNorm;
+ * RETURNS: None.
+ */
+BOOL EN5_RndPrimCreateFromGrid( en5PRIM *Pr, en5VERTEX *V, INT W, INT H, BOOL NeedNorm )
+{
+  INT i, j, k;
+  INT *Ind;
+
+  memset(Pr, 0, sizeof(en5PRIM));
+  if ((Ind = malloc(((2 * W + 1) * (H - 1) - 1) * sizeof(INT))) == NULL)
+    return FALSE;
+
+  for (i = 0, k = 0; i < H - 1; i++)
+  {
+    for (j = 0; j < W; j++)
+    {
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = i * W + j;
+    }
+    if (i != H - 2)
+      Ind[k++] = -1;
+  }
+
+  if (NeedNorm)
+  {
+    for (i = 0; i < W * H; i++)
+      V[i].N = VecSet(0, 0, 0);
+
+    for (i = 0; i < H - 1; i++)
+      for (j = 0; j < W - 1; j++)
+      {
+        en5VERTEX
+          *P00 = V + i * W + j,
+          *P01 = V + i * W + j + 1,
+          *P10 = V + (i + 1) * W + j,
+          *P11 = V + (i + 1) * W + j + 1;
+        VEC N;
+
+        N = VecNormalize(VecCrossVec(VecSubVec(P00->P, P10->P),
+                                     VecSubVec(P11->P, P10->P)));
+        P00->N = VecAddVec(P00->N, N);
+        P10->N = VecAddVec(P10->N, N);
+        P11->N = VecAddVec(P11->N, N);
+
+        N = VecNormalize(VecCrossVec(VecSubVec(P11->P, P01->P),
+                                     VecSubVec(P00->P, P01->P)));
+        P00->N = VecAddVec(P00->N, N);
+        P01->N = VecAddVec(P01->N, N);
+        P11->N = VecAddVec(P11->N, N);
+      }
+      for (i = 0; i < W * H; i++)
+        V[i].N = VecNormalize(V[i].N);
+  }
+
+  EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRISTRIP, V, W * H, Ind,
+    (2 * W + 1) * (H - 1) - 1);
+
+  free(Ind);
+  return TRUE;
+} /* End of 'EN5_RndPrimCreateFromGrid' function */
 
 /* END OF 'RNDPRIM.C' FILE */

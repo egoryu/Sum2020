@@ -17,6 +17,7 @@ typedef struct tagen5UNIT_CTRL
     Distance,      /* Camera offset */
     RotateAngle,   /* Camera rotate angle */
     ElevatorAngle; /* Camera elevator angle */
+  en5PRIM Axes;
 } en5UNIT_CTRL;
 
 /* Unit initialization function.
@@ -29,6 +30,18 @@ typedef struct tagen5UNIT_CTRL
  */
 static VOID EN5_UnitInit( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
+  en5VERTEX V[] = 
+    {
+      {{0, 0, 0}, {0, 0}, {0, 0, 0}, {1, 0, 0, 1}},
+      {{3000, 0, 0}, {0, 0}, {0, 0, 0}, {1, 0, 0, 1}},
+      {{0, 0, 0}, {0, 0}, {0, 0, 0}, {0, 1, 0, 1}},
+      {{0, 3000, 0}, {0, 0}, {0, 0, 0}, {0, 1, 0, 1}},
+      {{0, 0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 1, 1}},
+      {{0, 0, 3000}, {0, 0}, {0, 0, 0}, {0, 0, 1, 1}}
+    };
+  INT Ind[] = {0, 1, 2, 3, 4, 5};
+
+  EN5_RndPrimCreate(&Uni->Axes, EN5_RND_PRIM_LINES, V, 6, Ind, 6);
   Uni->RotateAngle = 30;
   Uni->ElevatorAngle = 47;
   Uni->Distance = 4;
@@ -65,10 +78,14 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
     EN5_FlipFullScreen();
   if (Ani->KeysClick[VK_ESCAPE])
     ;//EN5_AnimDoExit();
+  if (Ani->KeysClick['W'])
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  if (Ani->KeysClick['S'])
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+  Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * 15;
   if (Ani->Keys[VK_LBUTTON])
   {
-    Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * 0.2;
     Uni->RotateAngle += Ani->GlobalDeltaTime * 15 * Ani->Mdx;
     Uni->ElevatorAngle += Ani->GlobalDeltaTime * 15 * Ani->Mdy;
   }
@@ -92,6 +109,9 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
+  glLineWidth(18);
+  EN5_RndPrimDraw(&Uni->Axes, MatrIdentity());
+  glLineWidth(1);
 } /* End of 'EN5_UnitRender' function */
 
 /* Control unit creation function.

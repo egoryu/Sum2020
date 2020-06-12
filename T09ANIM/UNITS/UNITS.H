@@ -33,6 +33,12 @@ en5UNIT * EN5_UnitCreateControl( VOID );
  */
 en5UNIT * EN5_UnitCreateCow( VOID );
 
+/* Unit plane creation function.
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (en5UNIT *) pointer to created unit.
+ */
+en5UNIT * EN5_UnitCreatePlane( VOID );
 #endif /* __UNITS_H_ */
 
 /* END OF 'UNITS.H' FILE */

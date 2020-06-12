@@ -61,7 +61,7 @@ static VOID EN5_UnitResponse( en5UNIT_COW *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_COW *Uni, en5ANIM *Ani )
 {
-  INT i, j, k, s = 1;
+  INT i, j, k, s = 0;
 
   srand(30);
 
@@ -69,9 +69,9 @@ static VOID EN5_UnitRender( en5UNIT_COW *Uni, en5ANIM *Ani )
     for (j = -s; j <= s; j++)
       for (k = -s; k <= s; k++)
         EN5_RndPrimDraw(&Uni->Ball, 
-          MatrMulMatr3(MatrScale(VecSet(0.5, 0.5, 0.5)), 
-          MatrTranslate(VecSet(5 * k, 3 * j, 3 * i)), 
-          MatrRotateX(sin(EN5_Anim.Time * (rand() % 8)) + 1)));
+          MatrMulMatr3(MatrScale(VecSet(0.1, 0.1, 0.1)),
+          MatrTranslate(VecSet(0, 1, 0)), 
+          MatrRotateX(sin(EN5_Anim.Time * (rand() % 8)) * 5)));
 } /* End of 'EN5_UnitRender' function */
 
 /* Unit ball creation function.

@@ -49,8 +49,11 @@ VOID EN5_RndInit( HWND hWnd )
 
   EN5_RndProgId = EN5_RndShdLoad("DEFAULT");
 
-  glClearColor(0.30, 0.47, 0.8, 1);
+  glClearColor(1, 1, 1, 1);
   glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(-1);
 
   /* default parametrs */
   EN5_RndFrameH = 102;

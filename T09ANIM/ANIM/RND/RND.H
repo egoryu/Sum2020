@@ -40,6 +40,16 @@ typedef struct tagen5VERTEX
   VEC4 C; /* color */
 } en5VERTEX;
 
+/* Primitive type */
+typedef enum tagen5PRIM_TYPE
+{
+  EN5_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles */
+  EN5_RND_PRIM_TRISTRIP, /* Triangle strip - array of stripped triangles */
+  EN5_RND_PRIM_LINES,    /* Line segments (by 2 points) */
+  EN5_RND_PRIM_POINTS,   /* Arrauy of points */
+} en5PRIM_TYPE;
+
+
 /* Primitive representation type */
 typedef struct tagen5PRIM
 {
@@ -49,6 +59,7 @@ typedef struct tagen5PRIM
     IBuf;            /* OpenGL index buffer identifier */
   INT NumOfElements; /* Number of vertices or indices */
   MATR Trans;        /* Additional transformation matrix */
+  en5PRIM_TYPE Type; /* Primitive type */
 } en5PRIM;
 
 
@@ -122,7 +133,7 @@ VOID EN5_RndCamSet( VEC Loc, VEC At, VEC Up );
  *       INT NoofI;
  * RETURNS: None.
  */
-VOID EN5_RndPrimCreate( en5PRIM *Pr, en5VERTEX *V, INT NoofV, INT *I, INT NoofI );
+VOID EN5_RndPrimCreate( en5PRIM *Pr, en5PRIM_TYPE Type, en5VERTEX *V, INT NoofV, INT *I, INT NoofI );
 
 /* Delete primitive function.
  * ARGUMENTS:
@@ -200,6 +211,20 @@ INT EN5_RndShdLoad( CHAR *ShaderFileNamePrefix );
  * RETURNS: None.
  */
 VOID EN5_RndShdDelete( INT ProgId );
+
+/* Create grid primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       en5PRIM *Pr;
+ *   - new primitive vertex array:
+ *       en5VERTEX *V;
+ *   - size of grid:
+ *       INT W, H;
+ *   - need or nor normolize:
+ *       BOOL NeedNorm;
+ * RETURNS: None.
+ */
+BOOL EN5_RndPrimCreateFromGrid( en5PRIM *Pr, en5VERTEX *V, INT W, INT H, BOOL NeedNorm );
 
 #endif /* __RND_H_ */
 

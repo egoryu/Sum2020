@@ -58,9 +58,10 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
 
+  EN5_AnimUnitAdd(EN5_UnitCreateControl());
   EN5_AnimUnitAdd(EN5_UnitCreateBall());
   EN5_AnimUnitAdd(EN5_UnitCreateCow());
-  EN5_AnimUnitAdd(EN5_UnitCreateControl());
+  EN5_AnimUnitAdd(EN5_UnitCreatePlane());
   
   while (TRUE)
   if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))

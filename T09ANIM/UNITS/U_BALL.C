@@ -60,7 +60,7 @@ static VOID EN5_UnitResponse( en5UNIT_BALL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_BALL *Uni, en5ANIM *Ani )
 {
-  EN5_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(VecSet(0, 0, 6)), MatrRotateY(EN5_Anim.Time)));
+  EN5_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(VecSet(5, 0, 0)), MatrRotateY(EN5_Anim.Time)));
 } /* End of 'EN5_UnitRender' function */
 
 /* Unit ball creation function.
