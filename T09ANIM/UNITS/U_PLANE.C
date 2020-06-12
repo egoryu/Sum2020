@@ -62,7 +62,7 @@ static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
       r1 = Pixels1[bm1.bmWidthBytes * y + x * (bm1.bmBitsPixel / 8) + 2];
 
       V[y][x].P = VecSet(x - GRID_W / 2, (b1 + g1 + r1), GRID_H / 2 - y);
-      V[y][x].C = Vec4Set(b / 255.0, g / 255.0, r / 255.0, 1);
+      V[y][x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
     }
   EN5_RndPrimCreateFromGrid(&Uni->Plane, V[0], GRID_W, GRID_H, TRUE);
  /* INT i, j;

@@ -60,7 +60,7 @@ VOID EN5_RndInit( HWND hWnd )
   EN5_RndFrameW = 102;
 
   EN5_RndProjSize = EN5_RndProjDist = 1.0;
-  EN5_RndProjFarClip = 1000;
+  EN5_RndProjFarClip = 3000;
 
   EN5_RndProjSet();
   EN5_RndCamSet(VecSet(3, 3, 3), VecSet(0, 0, 0), VecSet(0, 1, 0));
