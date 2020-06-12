@@ -18,6 +18,7 @@ extern HWND EN5_hRndWnd;        /* Work window handle */
 extern HDC EN5_hRndDC;     /* Work window memory device context */
 extern HGLRC EN5_hRndGLRC;
 extern INT EN5_RndFrameH, EN5_RndFrameW; /* Work window size */
+extern INT EN5_RndProgId;
 
 extern DBL
   EN5_RndProjSize,  /* Project plane fit square */
@@ -175,13 +176,30 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL RX, DBL r, INT SplitW, INT Sp
 /* Load primitive from '*.OBJ' file function.
  * ARGUMENTS:
  *   - pointer to primitive to create:
- *       vg4PRIM *Pr;
+ *       en5PRIM *Pr;
  *   - '*.OBJ' file name:
  *       CHAR *FileName;
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
 BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName );
+
+/* Load shader program from .GLSL files function.
+ * ARGUMENTS:
+ *   - shader file path to load (path\***.glsl):
+ *       CHAR *ShaderFileNamePrefix;
+ * RETURNS:
+ *   (INT) load shader program Id.
+ */
+INT EN5_RndShdLoad( CHAR *ShaderFileNamePrefix );
+
+/* Unload shader program from memory files function.
+ * ARGUMENTS:
+ *   - shader program Id:
+ *       INT ProgId;
+ * RETURNS: None.
+ */
+VOID EN5_RndShdDelete( INT ProgId );
 
 #endif /* __RND_H_ */
 

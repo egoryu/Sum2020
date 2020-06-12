@@ -11,6 +11,7 @@ HWND EN5_hRndWnd;        /* Work window handle */
 HDC EN5_hRndDC;     /* Work window memory device context  */
 HGLRC EN5_hRndGLRC;
 INT EN5_RndFrameH, EN5_RndFrameW; /* Work window size */
+INT EN5_RndProgId;
 
 DBL
   EN5_RndProjSize,  /* Project plane fit square */

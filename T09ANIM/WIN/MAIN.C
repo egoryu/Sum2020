@@ -71,7 +71,10 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
     DispatchMessage(&msg);
   }
   else
-    SendMessage(hWnd, WM_TIMER, 30, 0);
+  {
+    EN5_AnimRender();
+    EN5_AnimCopyFrame();
+  }
 
   return 0;
 } /* End of 'WinMain' function */
@@ -103,11 +106,11 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   case WM_CREATE:
     EN5_AnimInit(hWnd);
 
-    SetTimer(hWnd, 30, 1, NULL);
+    SetTimer(hWnd, 30, 0, NULL);
     return 0;
   case WM_TIMER:
-    hDC = GetDC(hWnd);
     EN5_AnimRender();
+    EN5_AnimCopyFrame();
     /*
     EN5_RndPrimDraw(&Pr, MatrMulMatr3(MatrTranslate(VecSet(5, 0, 0)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime)));
 
@@ -120,16 +123,14 @@ LRESULT CALLBACK WinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     v = VecMulNum(v, sin(GlobalTime * 5) * 5);
     EN5_RndPrimDraw(&Cow, MatrMulMatr6(MatrRotateZ(Angle), MatrTranslate(VecSet(10, 0, 0)), MatrScale(VecSet(0.5, 0.5, 0.5)), MatrRotateX(GlobalTime * 30 * 2), MatrRotateY(30 * 2 * GlobalTime), MatrTranslate(v)));
     */
-
-    EN5_AnimCopyFrame();
-    ReleaseDC(hWnd, hDC);
     return 0;
   case WM_ERASEBKGND:
     return 1;
   case WM_SIZE:
     EN5_AnimResize(LOWORD(lParam), HIWORD(lParam));
 
-    SendMessage(hWnd, WM_TIMER, 0, 0);
+    EN5_AnimRender();
+    EN5_AnimCopyFrame();
     return 0;
   case WM_KEYDOWN:
     if (wParam == VK_ESCAPE)

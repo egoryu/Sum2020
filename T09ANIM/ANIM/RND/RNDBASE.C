@@ -5,6 +5,8 @@
  *          Render system render handle function
  */
 
+#include <time.h>
+
 #include "rnd.h"
 
 #pragma comment(lib, "opengl32")
@@ -44,6 +46,8 @@ VOID EN5_RndInit( HWND hWnd )
       MB_ICONERROR | MB_OK);
     exit(0);
   }
+
+  EN5_RndProgId = EN5_RndShdLoad("DEFAULT");
 
   glClearColor(0.30, 0.47, 0.8, 1);
   glEnable(GL_DEPTH_TEST);
@@ -102,6 +106,17 @@ VOID EN5_RndCopyFrame( VOID )
  */
 VOID EN5_RndStart( VOID )
 {
+  LONG t;
+  static LONG save_t = -1;
+
+  t = clock();
+  if (t - save_t > 2 * CLOCKS_PER_SEC)
+  {
+    save_t = t;
+    EN5_RndShdDelete(EN5_RndProgId);
+    EN5_RndProgId = EN5_RndShdLoad("DEFAULT");
+  }
+
   /* Clear frame */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

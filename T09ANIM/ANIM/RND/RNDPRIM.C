@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "rnd.h"
+#include "../anim.h"
 
 /* Create primitive function.
  * ARGUMENTS:
@@ -103,10 +104,17 @@ VOID EN5_RndPrimFree( en5PRIM *Pr )
 VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
 {
   MATR wvp = MatrMulMatr3(Pr->Trans, World, EN5_RndMatrVP);
+  INT loc;
 
   /* Send matrix to OpenGL /v.1.0 */
   glLoadMatrixf(wvp.M[0]);
 
+  glUseProgram(EN5_RndProgId);
+
+  if ((loc = glGetUniformLocation(EN5_RndProgId, "MatrWVP")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
+  if ((loc = glGetUniformLocation(EN5_RndProgId, "Time")) != -1)
+    glUniform1f(loc, EN5_Anim.Time);
   /* Draw primitive */
   glBindVertexArray(Pr->VA);
 
@@ -118,6 +126,7 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
   else
     glDrawArrays(GL_TRIANGLES, 0, Pr->NumOfElements);
   glBindVertexArray(0);
+  glUseProgram(0);
 } /* End of 'EN5_RndPrimDraw' function */
 
 /* Create prim of sphere function 
@@ -231,7 +240,7 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL R, DBL r, INT SplitW, INT Spl
 /* Load primitive from '*.OBJ' file function.
  * ARGUMENTS:
  *   - pointer to primitive to create:
- *       vg4PRIM *Pr;
+ *       en5PRIM *Pr;
  *   - '*.OBJ' file name:
  *       CHAR *FileName;
  * RETURNS:

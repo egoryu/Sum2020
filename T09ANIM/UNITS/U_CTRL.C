@@ -68,7 +68,7 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 
   if (Ani->Keys[VK_LBUTTON])
   {
-    Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * 0.1;
+    Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * 0.2;
     Uni->RotateAngle += Ani->GlobalDeltaTime * 15 * Ani->Mdx;
     Uni->ElevatorAngle += Ani->GlobalDeltaTime * 15 * Ani->Mdy;
   }
