@@ -202,6 +202,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ANIM\IMAGE.C"
+					>
+				</File>
+				<File
+					RelativePath=".\ANIM\IMAGE.H"
+					>
+				</File>
+				<File
 					RelativePath=".\ANIM\INPUT.C"
 					>
 				</File>

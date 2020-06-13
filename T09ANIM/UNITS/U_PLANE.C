@@ -5,9 +5,7 @@
  */
 
 #include "units.h"
-
-#define GRID_H 1024
-#define GRID_W 1024
+#include "../anim/image.h"
 
 typedef struct tagen5UNIT_PLANE
 {
@@ -37,34 +35,31 @@ static VOID EN5_UnitClose( en5UNIT_PLANE *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
 {
-  static HBITMAP hBm, hBm1;
-  static BYTE *Pixels, *Pixels1;
-  static BITMAP bm, bm1;
-  static en5VERTEX V[GRID_H][GRID_W];
-  INT b, g, r, x, y, b1, g1, r1;
+  en5IMAGE img1, img2;
+  en5VERTEX *V;
+  INT x, y, b, g, r, a, d;
 
-  hBm = LoadImage(NULL, "hftex.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-  hBm1 = LoadImage(NULL, "hf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-  GetObject(hBm, sizeof(bm), &bm);
-  GetObject(hBm1, sizeof(bm1), &bm1);
+  if (EN5_ImgLoad(&img1, "hf.bmp") && EN5_ImgLoad(&img2, "hftex.bmp") && (V = malloc(sizeof(en5VERTEX) * img1.H * img1.W)) != NULL)
+  {
+    for (y = 0; y < img1.H; y++)
+      for (x = 0; x < img1.W; x++)
+      {
+        b = img2.Pixels[(img2.W * y + x) * 4 + 0];
+        g = img2.Pixels[(img2.W * y + x) * 4 + 1];
+        r = img2.Pixels[(img2.W * y + x) * 4 + 2];
+        a = img2.Pixels[(img2.W * y + x) * 4 + 3];
+        
+        d = img1.Pixels[(img1.W * y + x) * 4 + 1];
 
-  Pixels = bm.bmBits;
-  Pixels1 = bm1.bmBits;
-  for (y = 0; y < GRID_H; y++)
-    for (x = 0; x < GRID_W - 2; x++)
-    {
-      b = Pixels[bm.bmWidthBytes * y + x * (bm.bmBitsPixel / 8) + 0];
-      g = Pixels[bm.bmWidthBytes * y + x * (bm.bmBitsPixel / 8) + 1];
-      r = Pixels[bm.bmWidthBytes * y + x * (bm.bmBitsPixel / 8) + 2];
-      
-      b1 = Pixels1[bm1.bmWidthBytes * y + x * (bm1.bmBitsPixel / 8) + 0];
-      g1 = Pixels1[bm1.bmWidthBytes * y + x * (bm1.bmBitsPixel / 8) + 1];
-      r1 = Pixels1[bm1.bmWidthBytes * y + x * (bm1.bmBitsPixel / 8) + 2];
+        V[img1.W * y + x].P = VecSet(x - img1.W / 2, d, img1.H / 2 - y);
+        V[img1.W * y + x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
+      }
+    EN5_RndPrimCreateFromGrid(&Uni->Plane, V, img1.W, img1.H, TRUE);
+  }
 
-      V[y][x].P = VecSet(x - GRID_W / 2, (b1 + g1 + r1), GRID_H / 2 - y);
-      V[y][x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
-    }
-  EN5_RndPrimCreateFromGrid(&Uni->Plane, V[0], GRID_W, GRID_H, TRUE);
+  EN5_ImgFree(&img1);
+  EN5_ImgFree(&img2);
+  free(V);
  /* INT i, j;
   static en5VERTEX V[GRID_H][GRID_W];
 

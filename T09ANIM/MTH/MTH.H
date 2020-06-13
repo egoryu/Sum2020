@@ -175,7 +175,7 @@ __inline VEC4 Vec4Set( FLT X, FLT Y, FLT Z, FLT W )
   v.X = X;
   v.Y = Y;
   v.Z = Z;
-  v.Z = W;
+  v.W = W;
   return v;
 } /* End of 'Vec4Set' function */
 

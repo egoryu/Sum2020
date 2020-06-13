@@ -341,7 +341,7 @@ BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName )
   for (i = 0; i < vn; i++)
   {
     V[i].N = VecNormalize(V[i].N);
-    V[i].C = Vec4Set(0.50, 0.8, 0.26, 1);
+    V[i].C = Vec4Set(0.80, 0.7, 0.4, 1);
   }
 
   EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRIMESH, V, vn, Ind, fn);
