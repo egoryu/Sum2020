@@ -30,6 +30,7 @@ typedef struct tagen5UNIT_CTRL
  */
 static VOID EN5_UnitInit( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
+  HFONT hFnt, hFntOld;
   en5VERTEX V[] = 
     {
       {{0, 0, 0}, {0, 0}, {0, 0, 0}, {1, 0, 0, 1}},
@@ -48,6 +49,13 @@ static VOID EN5_UnitInit( en5UNIT_CTRL *Uni, en5ANIM *Ani )
   Uni->RotateAngle = 30;
   Uni->ElevatorAngle = 47;
   Uni->Distance = 4;
+
+  hFnt = CreateFont(47, 0, 0, 0, 700, 0, 0, 0, 204, 4, 0, 4, 2 << 4 | 2, "Consolas");
+
+  hFntOld = SelectObject(Ani->hDC, hFnt);
+  wglUseFontBitmaps(Ani->hDC, 0, 256, 102);
+  SelectObject(Ani->hDC, hFntOld);
+  DeleteObject(hFnt);
 } /* End of 'EN5_UnitInit' function */
 
 /* Unit deinitialization function.
@@ -117,6 +125,35 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
+  INT n[10], i;
+  static CHAR Buf[10][100];
+
+  n[0] = sprintf(Buf[0], "FPS: %.3f", Ani->FPS);
+  n[1] = sprintf(Buf[1], "Renderer: %s", glGetString(GL_RENDERER));
+  n[2] = sprintf(Buf[2], "Vendor: %s", glGetString(GL_VENDOR));
+  n[3] = sprintf(Buf[3], "Version: %s", glGetString(GL_VERSION));
+  n[4] = sprintf(Buf[4], "GLSL ver: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  glUseProgram(0);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
+
+  glListBase(102);
+
+  for (i = 0; i < 5; i++)
+  {
+    glRasterPos2d(10, 47 * (i + 1));
+    glColor3d(0, 0, 0);
+    glCallLists(n[i], GL_UNSIGNED_BYTE, Buf[i]);
+
+    glRasterPos3d(13, 47 * (i + 1) + 3, -0.1);
+    glColor3d(1, 1, 1);
+    glCallLists(n[i], GL_UNSIGNED_BYTE, Buf[i]);
+  }
+
+  glPopAttrib();
+
   glLineWidth(18);
   EN5_RndPrimDraw(&Uni->Axes, MatrIdentity());
   glLineWidth(1);
