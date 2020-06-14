@@ -202,14 +202,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ANIM\IMAGE.C"
-					>
-				</File>
-				<File
-					RelativePath=".\ANIM\IMAGE.H"
-					>
-				</File>
-				<File
 					RelativePath=".\ANIM\INPUT.C"
 					>
 				</File>
@@ -249,13 +241,45 @@
 						>
 					</File>
 					<File
-						RelativePath=".\ANIM\RND\RNDSHD.C"
-						>
-					</File>
-					<File
 						RelativePath=".\ANIM\RND\wglew.h"
 						>
 					</File>
+					<File
+						RelativePath=".\ANIM\RND\wglext.h"
+						>
+					</File>
+					<Filter
+						Name="Resuorse"
+						>
+						<File
+							RelativePath=".\ANIM\RND\RES\IMAGE.C"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\IMAGE.H"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\RNDMTL.C"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\RNDRES.C"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\RNDRES.H"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\RNDSHD.C"
+							>
+						</File>
+						<File
+							RelativePath=".\ANIM\RND\RES\RNDTXT.C"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter

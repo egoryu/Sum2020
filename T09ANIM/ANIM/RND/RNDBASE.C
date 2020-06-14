@@ -47,8 +47,6 @@ VOID EN5_RndInit( HWND hWnd )
     exit(0);
   }
 
-  EN5_RndProgId = EN5_RndShdLoad("DEFAULT");
-
   glClearColor(1, 1, 1, 1);
   glEnable(GL_DEPTH_TEST);
 
@@ -56,6 +54,8 @@ VOID EN5_RndInit( HWND hWnd )
   glPrimitiveRestartIndex(-1);
 
   /* default parametrs */
+  EN5_RndResInit();
+
   EN5_RndFrameH = 102;
   EN5_RndFrameW = 102;
 
@@ -72,6 +72,7 @@ VOID EN5_RndInit( HWND hWnd )
  */
 VOID EN5_RndClose( VOID )
 {
+  EN5_RndResClose();
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(EN5_hRndGLRC);
 } /* End of 'EN5_RndClose' function */
@@ -114,11 +115,7 @@ VOID EN5_RndStart( VOID )
 
   t = clock();
   if (t - save_t > 2 * CLOCKS_PER_SEC)
-  {
-    save_t = t;
-    EN5_RndShdDelete(EN5_RndProgId);
-    EN5_RndProgId = EN5_RndShdLoad("DEFAULT");
-  }
+    EN5_RndShadersUpdate();
 
   /* Clear frame */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -165,6 +162,7 @@ VOID EN5_RndProjSet( VOID )
  */
 VOID EN5_RndCamSet( VEC Loc, VEC At, VEC Up )
 {
+  EN5_RndCamLoc = Loc;
   EN5_RndMatrView = MatrView(Loc, At, Up);
   EN5_RndMatrVP = MatrMulMatr(EN5_RndMatrView, EN5_RndMatrProj);
 } /* End of 'EN5_RndCamSet' function */

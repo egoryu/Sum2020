@@ -104,21 +104,29 @@ VOID EN5_RndPrimFree( en5PRIM *Pr )
  */
 VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
 {
-  MATR wvp = MatrMulMatr3(Pr->Trans, World, EN5_RndMatrVP);
+  MATR
+    w = MatrMulMatr(Pr->Trans, World),
+    winv = MatrTranspose(MatrInverse(w)),
+    wvp = MatrMulMatr(w, EN5_RndMatrVP);
   INT gl_prim_type = Pr->Type == EN5_RND_PRIM_LINES ? GL_LINES :
                    Pr->Type == EN5_RND_PRIM_TRIMESH ? GL_TRIANGLES :
                    Pr->Type == EN5_RND_PRIM_TRISTRIP ? GL_TRIANGLE_STRIP :
                    GL_POINTS;
-  INT loc;
+  INT loc, ProgId;
 
-  /* Send matrix to OpenGL /v.1.0 */
-  glLoadMatrixf(wvp.M[0]);
+  ProgId = EN5_RndMtlApply(Pr->MtlNo);
+  glUseProgram(ProgId);
 
-  glUseProgram(EN5_RndProgId);
-
-  if ((loc = glGetUniformLocation(EN5_RndProgId, "MatrWVP")) != -1)
+  /* Pass render uniforms */
+  if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
-  if ((loc = glGetUniformLocation(EN5_RndProgId, "Time")) != -1)
+  if ((loc = glGetUniformLocation(ProgId, "MatrW")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, w.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
+    glUniform3fv(loc, 1, &EN5_RndCamLoc.X);
+  if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
     glUniform1f(loc, EN5_Anim.Time);
   /* Draw primitive */
   glBindVertexArray(Pr->VA);
@@ -171,10 +179,12 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
         z = cos(phi) * sin(theta);
 
       V[k].P = VecSet(C.X + RX * x, C.Y + RY * y, C.Z + RZ * z);
+      
+      V[k].T = Vec2Set(C.X + RX * x, C.Y + RY * y);
 
       V[k].N = VecSet(x, y, z);
 
-      V[k].C = Vec4Set(0.8, 0.3, 0.26, 1);
+      V[k].C = Vec4Set1(0);
 
       k++;
     }
@@ -236,6 +246,8 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL R, DBL r, INT SplitW, INT Spl
       V[k].N = VecSet((R + r * cos(theta)) * cos(phi),
                       r * sin(theta),
                       (R + r * cos(theta)) * sin(phi));
+
+      V[k].T = Vec2Set(C.X + (R + r * cos(theta)) * cos(phi), C.Y + r * sin(theta));
 
       V[k].C = Vec4Set(0.8, 0.3, 0.26, 1);
 

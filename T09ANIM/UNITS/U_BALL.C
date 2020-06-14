@@ -35,7 +35,16 @@ static VOID EN5_UnitClose( en5UNIT_BALL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitInit( en5UNIT_BALL *Uni, en5ANIM *Ani )
 {
-  EN5_RndPrimCreateTop(&Uni->Ball, VecSet(0, 0, 0), 3, 1, 40, 30);
+  //EN5_RndPrimCreateTop(&Uni->Ball, VecSet(0, 0, 0), 3, 1, 40, 30);
+  en5MATERIAL mtl = EN5_RndMaterials[0];
+
+  EN5_RndPrimCreateSphere(&Uni->Ball, VecSet1(0), 100, 100, 100, 8 * 18, 8 * 18);
+  mtl.Tex[0] = EN5_RndTexAddG24("P06.G24");
+  mtl.Ka = VecSet1(0.2);
+  mtl.Kd = VecSet1(0.8);
+  mtl.Ks = VecSet1(0.8);
+  mtl.Ph = 90;
+  Uni->Ball.MtlNo = EN5_RndMtlAdd(&mtl);
 } /* End of 'EN5_UnitInit' function */
 
 /* Bounce ball unit inter frame events handle function.
@@ -60,7 +69,7 @@ static VOID EN5_UnitResponse( en5UNIT_BALL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_BALL *Uni, en5ANIM *Ani )
 {
-  EN5_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(VecSet(5, 0, 0)), MatrRotateY(EN5_Anim.Time)));
+  EN5_RndPrimDraw(&Uni->Ball, MatrIdentity());
 } /* End of 'EN5_UnitRender' function */
 
 /* Unit ball creation function.

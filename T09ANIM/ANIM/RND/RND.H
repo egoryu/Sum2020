@@ -10,7 +10,10 @@
 
 #define GLEW_STATIC
 #include "glew.h"
+#include <gl/gl.h>
+#include <glut.h>
 
+#include "res/rndres.h"
 #include "../../def.h"
 
 /* render data */
@@ -18,7 +21,6 @@ extern HWND EN5_hRndWnd;        /* Work window handle */
 extern HDC EN5_hRndDC;     /* Work window memory device context */
 extern HGLRC EN5_hRndGLRC;
 extern INT EN5_RndFrameH, EN5_RndFrameW; /* Work window size */
-extern INT EN5_RndProgId;
 
 extern DBL
   EN5_RndProjSize,  /* Project plane fit square */
@@ -31,6 +33,7 @@ extern MATR
   EN5_RndMatrProj, /* Projection coordinate system matrix */
   EN5_RndMatrVP;   /* Stored (View * Proj) matrix */
 
+extern VEC EN5_RndCamLoc;
 /* vertex type */
 typedef struct tagen5VERTEX
 {
@@ -60,6 +63,7 @@ typedef struct tagen5PRIM
   INT NumOfElements; /* Number of vertices or indices */
   MATR Trans;        /* Additional transformation matrix */
   en5PRIM_TYPE Type; /* Primitive type */
+  INT MtlNo; /* Material number in material array */
 } en5PRIM;
 
 
@@ -194,23 +198,6 @@ BOOL EN5_RndPrimCreateTop( en5PRIM *Pr, VEC C, DBL RX, DBL r, INT SplitW, INT Sp
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
 BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName );
-
-/* Load shader program from .GLSL files function.
- * ARGUMENTS:
- *   - shader file path to load (path\***.glsl):
- *       CHAR *ShaderFileNamePrefix;
- * RETURNS:
- *   (INT) load shader program Id.
- */
-INT EN5_RndShdLoad( CHAR *ShaderFileNamePrefix );
-
-/* Unload shader program from memory files function.
- * ARGUMENTS:
- *   - shader program Id:
- *       INT ProgId;
- * RETURNS: None.
- */
-VOID EN5_RndShdDelete( INT ProgId );
 
 /* Create grid primitive function.
  * ARGUMENTS:

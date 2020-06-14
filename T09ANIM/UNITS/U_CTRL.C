@@ -40,8 +40,11 @@ static VOID EN5_UnitInit( en5UNIT_CTRL *Uni, en5ANIM *Ani )
       {{0, 0, 3000}, {0, 0}, {0, 0, 0}, {0, 0, 1, 1}}
     };
   INT Ind[] = {0, 1, 2, 3, 4, 5};
+  en5MATERIAL mtl = EN5_RndMaterials[0];
 
   EN5_RndPrimCreate(&Uni->Axes, EN5_RND_PRIM_LINES, V, 6, Ind, 6);
+  mtl.ShdNo = EN5_RndShaderAdd("0");
+  Uni->Axes.MtlNo = EN5_RndMtlAdd(&mtl);
   Uni->RotateAngle = 30;
   Uni->ElevatorAngle = 47;
   Uni->Distance = 4;
@@ -71,6 +74,7 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
   VEC L = VecSet(0, 0, Uni->Distance);
   static CHAR Buf[102];
+  static DBL Mzk = 0.2;
 
   if (Ani->KeysClick['P'])
     Ani->IsPause = !Ani->IsPause;
@@ -82,8 +86,12 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   if (Ani->KeysClick['S'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  if (Ani->Keys['A'])
+    Mzk = 15;
+  else
+    Mzk = 0.2;
 
-  Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * 15;
+  Uni->Distance += Ani->GlobalDeltaTime * Ani->Mdz * Mzk;
   if (Ani->Keys[VK_LBUTTON])
   {
     Uni->RotateAngle += Ani->GlobalDeltaTime * 15 * Ani->Mdx;

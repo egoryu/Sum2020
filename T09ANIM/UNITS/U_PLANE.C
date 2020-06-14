@@ -5,7 +5,7 @@
  */
 
 #include "units.h"
-#include "../anim/image.h"
+#include "../anim/rnd/res/image.h"
 
 typedef struct tagen5UNIT_PLANE
 {
@@ -55,6 +55,7 @@ static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
         V[img1.W * y + x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
       }
     EN5_RndPrimCreateFromGrid(&Uni->Plane, V, img1.W, img1.H, TRUE);
+    Uni->Plane.MtlNo = 0;
   }
 
   EN5_ImgFree(&img1);
