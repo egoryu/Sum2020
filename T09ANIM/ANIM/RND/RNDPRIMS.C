@@ -103,7 +103,7 @@ BOOL EN5_RndPrimsLoad( en5PRIMS *Prs, CHAR *FileName )
     INT Tex[8];       /* Texture references 
                         * (8 time: texture number in G3DM file, -1 if no texture) */
     /* Shader information */
-    CHAR ShaderString[3000]; /* Additional shader information */
+    CHAR ShaderString[300]; /* Additional shader information */
     DWORD Shader;       /* Shader number (uses after load into memory) */
   } *mtls;
 
