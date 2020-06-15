@@ -12,9 +12,9 @@
 #include "image.h"
 
 #define EN5_STR_MAX  300
-#define EN5_MAX_TEXTURES 30
+#define EN5_MAX_TEXTURES 3000
 #define EN5_MAX_SHADERS  47
-#define EN5_MAX_MATERIALS 50
+#define EN5_MAX_MATERIALS 5000
 
 /* Shader program store type */
 typedef struct tagen5SHADER
@@ -109,7 +109,7 @@ VOID EN5_RndTexClose( VOID );
  * RETURNS:
  *   (INT) added texture table number.
  */
-INT EN5_RndTexAddImg( CHAR *Name, INT W, INT H, DWORD *Bits );
+INT EN5_RndTexAddImg( CHAR *Name, INT W, INT H, INT C, BYTE *Bits );
 
 /* Add texture from file G24 function.
  * ARGUMENTS:
@@ -158,7 +158,30 @@ VOID EN5_RndResClose( VOID );
 
 INT EN5_RndMtlAdd( en5MATERIAL *Mtl );
 
+/* Initialization resurse struct function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
 VOID EN5_RndResInit( VOID );
+
+/* Get material from context function.
+ * ARGUMENTS:
+ *   - number of material:
+ *       INT MtlNo;
+ * RETURNS:
+ *   (en5MATERIAL *) material.
+ */
+en5MATERIAL * EN5_RndMtlGet( INT MtlNo );
+
+/* Get default material from context function.
+ * ARGUMENTS:
+ *   - number of material:
+ *       INT MtlNo;
+ * RETURNS:
+ *   (en5MATERIAL *) material.
+ */
+en5MATERIAL EN5_RndMtlGetDef( VOID );
+
 #endif /* __RNDRES_H_ */
 
 /* END OF 'RNDRES.H' FILE */

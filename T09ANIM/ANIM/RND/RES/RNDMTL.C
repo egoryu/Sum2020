@@ -44,24 +44,10 @@ VOID EN5_RndMtlClose( VOID )
 
 INT EN5_RndMtlAdd( en5MATERIAL *Mtl )
 {
-  CHAR tname[EN5_STR_MAX];
-  INT i;
-
   if (EN5_RndMaterialsSize >= EN5_MAX_MATERIALS)
     return 0;
 
-  strncpy(tname, EN5_RndMaterials[EN5_RndMaterialsSize - 1].Name, EN5_STR_MAX - 1);
-  tname[8] = tname[8] + 1;
-  strncpy(EN5_RndMaterials[EN5_RndMaterialsSize].Name, tname, EN5_STR_MAX - 1);
-  EN5_RndMaterials[EN5_RndMaterialsSize].Ka = Mtl->Ka;
-  EN5_RndMaterials[EN5_RndMaterialsSize].Kd = Mtl->Kd;
-  EN5_RndMaterials[EN5_RndMaterialsSize].Ks = Mtl->Ks;
-  EN5_RndMaterials[EN5_RndMaterialsSize].Ph = Mtl->Ph;
-  EN5_RndMaterials[EN5_RndMaterialsSize].ShdNo = Mtl->ShdNo;
-  EN5_RndMaterials[EN5_RndMaterialsSize].Trans = Mtl->Trans;
-
-  for (i = 0; i < 8; i++)
-    EN5_RndMaterials[EN5_RndMaterialsSize].Tex[i] = Mtl->Tex[i];
+  EN5_RndMaterials[EN5_RndMaterialsSize] = *Mtl;
 
   return EN5_RndMaterialsSize++;
 }
@@ -123,5 +109,31 @@ INT EN5_RndMtlApply( INT MtlNo )
   return prg;
 } /* End of 'EN5_RndMtlApply' function */
 
+/* Get material from context function.
+ * ARGUMENTS:
+ *   - number of material:
+ *       INT MtlNo;
+ * RETURNS:
+ *   (en5MATERIAL *) material.
+ */
+en5MATERIAL * EN5_RndMtlGet( INT MtlNo )
+{
+  /* Get material pointer */
+  if (MtlNo < 0 || MtlNo >= EN5_RndMaterialsSize)
+    MtlNo = 0;
+  return &EN5_RndMaterials[MtlNo];
+} /* End of 'EN5_RndMtlGet' function */
+
+/* Get default material from context function.
+ * ARGUMENTS:
+ *   - number of material:
+ *       INT MtlNo;
+ * RETURNS:
+ *   (en5MATERIAL *) material.
+ */
+en5MATERIAL EN5_RndMtlGetDef( VOID )
+{
+  return EN5_RndMaterials[0];
+} /* End of 'EN5_RndMtlGetDef' function */
 
 /* END OF 'RNDMTL.C' FILE */

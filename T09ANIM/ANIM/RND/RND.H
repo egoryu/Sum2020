@@ -66,6 +66,13 @@ typedef struct tagen5PRIM
   INT MtlNo; /* Material number in material array */
 } en5PRIM;
 
+/* Primitive collection data type */
+typedef struct tagen5PRIMS
+{
+  INT NumOfPrims; /* Number of primitives in array */  
+  en5PRIM *Prims; /* Array of primitives */
+  MATR Trans;     /* Common transformation matrix */
+} en5PRIMS;
 
 /* Render system initialization function.
  * ARGUMENTS:
@@ -213,6 +220,45 @@ BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName );
  */
 BOOL EN5_RndPrimCreateFromGrid( en5PRIM *Pr, en5VERTEX *V, INT W, INT H, BOOL NeedNorm );
 
+/* Create array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       en5PRIMS *Prs;
+ *   - number of primitives to be add:
+ *       INT NumOfPrims;
+ * RETURNS:
+ *   (BOOL) TRUE if successful, FALSE otherwise.
+ */
+BOOL EN5_RndPrimsCreate( en5PRIMS *Prs, INT NumOfPrims );
+
+/* Delete array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       en5PRIMS *Prs;
+ * RETURNS: None.
+ */
+VOID EN5_RndPrimsFree( en5PRIMS *Prs );
+
+/* Draw array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       en5PRIMS *Prs;
+ *   - global transformation matrix:
+ *       MATR World;
+ * RETURNS: None.
+ */
+VOID EN5_RndPrimsDraw( en5PRIMS *Prs, MATR World );
+
+/* Load array of primitives from .G3DM file function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       en5PRIMS *Prs;
+ *   - file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if successful, FALSE otherwise.
+ */
+BOOL EN5_RndPrimsLoad( en5PRIMS *Prs, CHAR *FileName );
 #endif /* __RND_H_ */
 
 /* END OF 'RND.H' FILE */

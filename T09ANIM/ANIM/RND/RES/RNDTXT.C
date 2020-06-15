@@ -44,7 +44,7 @@ VOID EN5_RndTexClose( VOID )
  * RETURNS:
  *   (INT) added texture table number.
  */
-INT EN5_RndTexAddImg( CHAR *Name, INT W, INT H, DWORD *Bits )
+INT EN5_RndTexAddImg( CHAR *Name, INT W, INT H, INT C, BYTE *Bits )
 {
   if (EN5_RndTexturesSize >= EN5_MAX_TEXTURES)
     return -1;
@@ -55,6 +55,8 @@ INT EN5_RndTexAddImg( CHAR *Name, INT W, INT H, DWORD *Bits )
 
   /* Upload texture */
   gluBuild2DMipmaps(GL_TEXTURE_2D, 4, W, H, GL_BGR_EXT, GL_UNSIGNED_BYTE, Bits);
+  glTexImage2D(GL_TEXTURE_2D, 0, C, W, H, 0,
+    C == 3 ? GL_BGR : C == 4 ? GL_BGRA : GL_LUMINANCE, GL_UNSIGNED_BYTE, Bits);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

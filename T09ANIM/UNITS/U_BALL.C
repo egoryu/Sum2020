@@ -10,6 +10,7 @@ typedef struct tagen5UNIT_BALL
 {
   UNIT_BASE_FIELDS;
   en5PRIM Ball;
+  en5PRIMS Car;
 } en5UNIT_BALL;
 
 /* Unit deinitialization function.
@@ -22,6 +23,7 @@ typedef struct tagen5UNIT_BALL
  */
 static VOID EN5_UnitClose( en5UNIT_BALL *Uni, en5ANIM *Ani )
 {
+  EN5_RndPrimsFree(&Uni->Car);
   EN5_RndPrimFree(&Uni->Ball);
 } /* End of 'EN5_UnitClose' function */
 
@@ -47,6 +49,8 @@ static VOID EN5_UnitInit( en5UNIT_BALL *Uni, en5ANIM *Ani )
   mtl.Ph = 1;
   mtl.ShdNo = EN5_RndShaderAdd("SKY");
   Uni->Ball.MtlNo = EN5_RndMtlAdd(&mtl);
+
+  EN5_RndPrimsLoad(&Uni->Car, "dodge-challenger_model.g3dm");
 } /* End of 'EN5_UnitInit' function */
 
 /* Bounce ball unit inter frame events handle function.
@@ -71,6 +75,7 @@ static VOID EN5_UnitResponse( en5UNIT_BALL *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitRender( en5UNIT_BALL *Uni, en5ANIM *Ani )
 {
+  EN5_RndPrimsDraw(&Uni->Car, MatrMulMatr(MatrTranslate(VecSet(0, 2, 0)), MatrScale(VecSet1(0.1))));
   EN5_RndPrimDraw(&Uni->Ball, MatrIdentity());
 } /* End of 'EN5_UnitRender' function */
 

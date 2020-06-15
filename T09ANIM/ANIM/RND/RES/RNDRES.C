@@ -6,6 +6,10 @@
  */
 #include "rndres.h"
 
+/* Initialization resurse struct function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
 VOID EN5_RndResInit( VOID )
 {
   EN5_RndMtlInit();
