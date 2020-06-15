@@ -180,7 +180,8 @@ BOOL EN5_RndPrimCreateSphere( en5PRIM *Pr, VEC C, DBL RX, DBL RY, DBL RZ, INT Sp
 
       V[k].P = VecSet(C.X + RX * x, C.Y + RY * y, C.Z + RZ * z);
       
-      V[k].T = Vec2Set(C.X + RX * x, C.Y + RY * y);
+      V[k].T.X = j / (SplitW - 1.0);
+      V[k].T.Y = -i / (SplitH - 1.0);
 
       V[k].N = VecSet(x, y, z);
 
@@ -353,7 +354,8 @@ BOOL EN5_RndPrimLoad(en5PRIM *Pr, CHAR *FileName )
   for (i = 0; i < vn; i++)
   {
     V[i].N = VecNormalize(V[i].N);
-    V[i].C = Vec4Set(0.80, 0.7, 0.4, 1);
+    V[i].T.X = i / (vn - 1.0);
+    V[i].T.Y = -i / (vn - 1.0);
   }
 
   EN5_RndPrimCreate(Pr, EN5_RND_PRIM_TRIMESH, V, vn, Ind, fn);

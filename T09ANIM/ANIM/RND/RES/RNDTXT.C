@@ -26,6 +26,11 @@ VOID EN5_RndTexInit( VOID )
  */
 VOID EN5_RndTexClose( VOID )
 {
+  INT i;
+
+  for (i = 0; i < EN5_RndTexturesSize; i++)
+    glDeleteTextures(1, &EN5_RndTextures[i].TexId);
+  EN5_RndTexturesSize = 0;
 } /* End of 'EN5_RndTexClose' function */
 
 /* Add texture from image function.
@@ -143,7 +148,7 @@ INT EN5_RndTexAddBMP( CHAR *FileName )
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   /* Upload texture */
-  gluBuild2DMipmaps(GL_TEXTURE_2D, 3, img.W, img.H, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.Pixels);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, 3, img.W, img.H, GL_BGRA, GL_UNSIGNED_BYTE, img.Pixels);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

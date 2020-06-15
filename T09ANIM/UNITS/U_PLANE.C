@@ -51,7 +51,7 @@ static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
         
         d = img1.Pixels[(img1.W * y + x) * 4 + 1];
 
-        V[img1.W * y + x].P = VecSet(x - img1.W / 2, d, img1.H / 2 - y);
+        V[img1.W * y + x].P = VecSet(x - img1.W / 2, d - 12, img1.H / 2 - y);
         V[img1.W * y + x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
       }
     EN5_RndPrimCreateFromGrid(&Uni->Plane, V, img1.W, img1.H, TRUE);

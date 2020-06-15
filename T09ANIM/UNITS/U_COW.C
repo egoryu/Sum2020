@@ -36,8 +36,17 @@ static VOID EN5_UnitClose( en5UNIT_COW *Uni, en5ANIM *Ani )
  */
 static VOID EN5_UnitInit( en5UNIT_COW *Uni, en5ANIM *Ani )
 {
+  en5MATERIAL mtl = EN5_RndMaterials[0];
+
   Uni->Pos = VecSet(0, 1, 0);
   EN5_RndPrimLoad(&Uni->Ball, "cow.obj");
+  mtl.Tex[0] = EN5_RndTexAddBMP("cow.bmp");
+  mtl.Ka = VecSet1(0.1);
+  mtl.Kd = VecSet1(0.2);
+  mtl.Ks = VecSet1(0.3);
+  mtl.Ph = 100;
+  mtl.ShdNo = EN5_RndShaderAdd("SKY");
+  Uni->Ball.MtlNo = EN5_RndMtlAdd(&mtl);
 } /* End of 'EN5_UnitInit' function */
 /* Bounce ball unit inter frame events handle function.
  * ARGUMENTS:

@@ -19,9 +19,9 @@ VOID EN5_RndMtlInit( VOID )
 
   strncpy(EN5_RndMaterials[0].Name, "MATERIALA", EN5_STR_MAX - 1);
   EN5_RndMaterials[0].Ka = VecSet1(0);
-  EN5_RndMaterials[0].Kd = VecSet1(1);
-  EN5_RndMaterials[0].Ks = VecSet1(0);
-  EN5_RndMaterials[0].Ph = 0;
+  EN5_RndMaterials[0].Kd = VecSet1(0.1);
+  EN5_RndMaterials[0].Ks = VecSet1(0.2);
+  EN5_RndMaterials[0].Ph = 100;
   EN5_RndMaterials[0].ShdNo = EN5_RndShaderAdd("DEFAULT");
   EN5_RndMaterials[0].Tex[0] = -1;
   for (i = 1; i < 8; i++)
@@ -87,8 +87,7 @@ INT EN5_RndMtlApply( INT MtlNo )
   prg = mtl->ShdNo;
   if (prg < 0 || prg >= EN5_RndShadersSize)
     prg = 0;
-  else
-    prg = EN5_RndShaders[prg].ProgId;
+  prg = EN5_RndShaders[prg].ProgId;
 
   glUseProgram(prg);
   /* Set shading parameters */

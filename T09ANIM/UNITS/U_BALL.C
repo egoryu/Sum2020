@@ -38,12 +38,14 @@ static VOID EN5_UnitInit( en5UNIT_BALL *Uni, en5ANIM *Ani )
   //EN5_RndPrimCreateTop(&Uni->Ball, VecSet(0, 0, 0), 3, 1, 40, 30);
   en5MATERIAL mtl = EN5_RndMaterials[0];
 
-  EN5_RndPrimCreateSphere(&Uni->Ball, VecSet1(0), 100, 100, 100, 8 * 18, 8 * 18);
-  mtl.Tex[0] = EN5_RndTexAddG24("P06.G24");
-  mtl.Ka = VecSet1(0.2);
-  mtl.Kd = VecSet1(0.8);
-  mtl.Ks = VecSet1(0.8);
-  mtl.Ph = 90;
+  EN5_RndPrimCreateSphere(&Uni->Ball, VecSet1(0), 500, 500, 500, 8 * 18, 8 * 18);
+  //mtl.Tex[0] = EN5_RndTexAddG24("P06.G24");
+  mtl.Tex[0] = EN5_RndTexAddBMP("sky.bmp");
+  mtl.Ka = VecSet1(0);
+  mtl.Kd = VecSet1(0.9);
+  mtl.Ks = VecSet1(0.9);
+  mtl.Ph = 1;
+  mtl.ShdNo = EN5_RndShaderAdd("SKY");
   Uni->Ball.MtlNo = EN5_RndMtlAdd(&mtl);
 } /* End of 'EN5_UnitInit' function */
 

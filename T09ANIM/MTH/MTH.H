@@ -758,6 +758,20 @@ __inline MATR MatrFrustum( FLT L, FLT R, FLT B, FLT T, FLT N, FLT F )
   return m;
 } /* End of 'MatrFrustum' function */
 
+__inline MATR MatrOrtho( FLT l, FLT r, FLT b, FLT t, FLT n, FLT f )
+{
+  MATR m =
+  {
+    {
+    {2 / (r - l), 0, 0, 0},
+    {0, 2 / (t - b), 0, 0},
+    {0, 0, -2 / (f - n), 0},
+    {-(r + l) / (r - l), -(t + b) / (t - b), -(f + n) / (f - n), 1}
+  }
+};
+
+return m;
+}
 #endif /* __MTH_H_ */
 
 /* END OF 'MTH.H' FILE */

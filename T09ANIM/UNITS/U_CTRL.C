@@ -126,6 +126,7 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 static VOID EN5_UnitRender( en5UNIT_CTRL *Uni, en5ANIM *Ani )
 {
   INT n[10], i;
+  MATR m = MatrOrtho(0, Ani->W - 10, Ani->H - 10, 0, -1, 1);
   static CHAR Buf[10][100];
 
   n[0] = sprintf(Buf[0], "FPS: %.3f", Ani->FPS);
@@ -138,6 +139,7 @@ static VOID EN5_UnitRender( en5UNIT_CTRL *Uni, en5ANIM *Ani )
   glUseProgram(0);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
+  glLoadMatrixf(m.M[0]);
 
   glListBase(102);
 
