@@ -39,6 +39,14 @@ en5UNIT * EN5_UnitCreateCow( VOID );
  *   (en5UNIT *) pointer to created unit.
  */
 en5UNIT * EN5_UnitCreatePlane( VOID );
+
+/* Unit tanks creation function.
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (en5UNIT *) pointer to created unit.
+ */
+en5UNIT * EN5_UnitCreateTanks( VOID );
+
 #endif /* __UNITS_H_ */
 
 /* END OF 'UNITS.H' FILE */

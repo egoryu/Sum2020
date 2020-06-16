@@ -34,6 +34,9 @@ extern MATR
   EN5_RndMatrVP;   /* Stored (View * Proj) matrix */
 
 extern VEC EN5_RndCamLoc;
+
+extern FLT EN5_RndShdAddons0, EN5_RndShdAddons1, EN5_RndShdAddons2;
+
 /* vertex type */
 typedef struct tagen5VERTEX
 {
@@ -64,6 +67,7 @@ typedef struct tagen5PRIM
   MATR Trans;        /* Additional transformation matrix */
   en5PRIM_TYPE Type; /* Primitive type */
   INT MtlNo; /* Material number in material array */
+  VEC MinBB, MaxBB;
 } en5PRIM;
 
 /* Primitive collection data type */

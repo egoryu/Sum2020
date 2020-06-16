@@ -90,9 +90,9 @@ static VOID EN5_UnitResponse( en5UNIT_CTRL *Uni, en5ANIM *Ani )
     EN5_FlipFullScreen();
   if (Ani->KeysClick[VK_ESCAPE])
     ;//EN5_AnimDoExit();
-  if (Ani->KeysClick['W'])
+  if (Ani->Keys[VK_SHIFT] && Ani->KeysClick['W'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  if (Ani->KeysClick['S'])
+  if (Ani->Keys[VK_SHIFT] && Ani->KeysClick['S'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   if (Ani->Keys['A'])
     Mzk = 15;

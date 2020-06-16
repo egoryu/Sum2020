@@ -38,6 +38,7 @@ static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
   en5IMAGE img1, img2;
   en5VERTEX *V;
   INT x, y, b, g, r, a, d;
+  en5MATERIAL mtl = EN5_RndMaterials[0];
 
   if (EN5_ImgLoad(&img1, "hf.bmp") && EN5_ImgLoad(&img2, "hftex.bmp") && (V = malloc(sizeof(en5VERTEX) * img1.H * img1.W)) != NULL)
   {
@@ -55,7 +56,8 @@ static VOID EN5_UnitInit( en5UNIT_PLANE *Uni, en5ANIM *Ani )
         V[img1.W * y + x].C = Vec4Set(r / 255.0, g / 255.0, b / 255.0, 1);
       }
     EN5_RndPrimCreateFromGrid(&Uni->Plane, V, img1.W, img1.H, TRUE);
-    Uni->Plane.MtlNo = 0;
+    mtl.ShdNo = EN5_RndShaderAdd("NORMAL");
+    Uni->Plane.MtlNo = EN5_RndMtlAdd(&mtl);
   }
 
   EN5_ImgFree(&img1);

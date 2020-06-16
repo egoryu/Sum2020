@@ -30,6 +30,25 @@ VOID EN5_RndPrimCreate( en5PRIM *Pr, en5PRIM_TYPE Type, en5VERTEX *V, INT NoofV,
 
   if (V != NULL)
   {
+    INT i;
+
+    Pr->MaxBB = Pr->MinBB = V[0].P;
+    for (i = 1; i < NoofV; i++)
+    {
+      if (Pr->MinBB.X > V[i].P.X)
+        Pr->MinBB.X = V[i].P.X;
+      if (Pr->MinBB.Y > V[i].P.Y)
+        Pr->MinBB.Y = V[i].P.Y;
+      if (Pr->MinBB.Z > V[i].P.Z)
+        Pr->MinBB.Z = V[i].P.Z;
+
+      if (Pr->MaxBB.X < V[i].P.X)
+        Pr->MaxBB.X = V[i].P.X;
+      if (Pr->MaxBB.Y < V[i].P.Y)
+        Pr->MaxBB.Y = V[i].P.Y;
+      if (Pr->MaxBB.Z < V[i].P.Z)
+        Pr->MaxBB.Z = V[i].P.Z;
+    }
     /* Generate vertex array and vertex buffer */
     glGenBuffers(1, &Pr->VBuf);
     glGenVertexArrays(1, &Pr->VA);
@@ -114,6 +133,7 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
                    GL_POINTS;
   INT loc, ProgId;
 
+  glLoadMatrixf(wvp.M[0]);
   ProgId = EN5_RndMtlApply(Pr->MtlNo);
   glUseProgram(ProgId);
 
@@ -128,6 +148,15 @@ VOID EN5_RndPrimDraw( en5PRIM *Pr, MATR World )
     glUniform3fv(loc, 1, &EN5_RndCamLoc.X);
   if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
     glUniform1f(loc, EN5_Anim.Time);
+  
+  /* addonse */
+  if ((loc = glGetUniformLocation(ProgId, "addon0")) != -1)
+    glUniform1f(loc, EN5_RndShdAddons0);
+  if ((loc = glGetUniformLocation(ProgId, "addon1")) != -1)
+    glUniform1f(loc, EN5_RndShdAddons1);
+  if ((loc = glGetUniformLocation(ProgId, "addon2")) != -1)
+    glUniform1f(loc, EN5_RndShdAddons2);
+
   /* Draw primitive */
   glBindVertexArray(Pr->VA);
 

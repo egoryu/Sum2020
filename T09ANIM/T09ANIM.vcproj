@@ -314,6 +314,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\U_TANKS.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\UNITS.H"
 					>
 				</File>

@@ -24,4 +24,6 @@ MATR
 
 VEC EN5_RndCamLoc;
 
+FLT EN5_RndShdAddons0, EN5_RndShdAddons1, EN5_RndShdAddons2;
+
 /* END OF 'RNDDATA.C' FILE */

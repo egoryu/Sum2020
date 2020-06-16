@@ -1,0 +1,49 @@
+/**/
+#version 430
+
+layout(location = 0) out vec4 OutColor;
+
+in vec4 DrawColor;
+in vec2 DrawTexCoord;
+in vec3 DrawNormal;
+in vec3 DrawPos;
+
+uniform vec3 Ka, Kd, Ks;
+uniform float Ph;
+uniform vec3 CamLoc;
+
+layout(binding = 0) uniform sampler2D Texture0;
+uniform bool IsTexture0;
+
+vec3 Shade( vec3 P, vec3 N, vec3 L )
+{
+  vec3 V = normalize(P);
+  vec3 color = vec3(0);
+
+  // Ambient
+  color += Ka;
+
+  // Duffuse
+  float nl = dot(N, L);
+  if (nl > 0)
+  {
+    vec4 tc = texture(Texture0, DrawTexCoord);
+    
+    color += Kd * nl * tc.rgb;
+
+    // Specular
+    vec3 R = reflect(V, N);
+    float rl = dot(R, L);
+    if (rl > 0)
+      color += Ks * pow(rl, Ph);
+  }
+  return color;
+}
+
+void main( void )
+{
+  vec3 N = normalize(DrawNormal);
+  vec3 L = normalize(vec3(1, 1, 1));  // light source
+
+  OutColor = /*DrawColor;*/vec4(Shade(DrawPos, N, L), 1);
+}

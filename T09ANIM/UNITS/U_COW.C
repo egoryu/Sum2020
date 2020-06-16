@@ -45,7 +45,7 @@ static VOID EN5_UnitInit( en5UNIT_COW *Uni, en5ANIM *Ani )
   mtl.Kd = VecSet1(0.2);
   mtl.Ks = VecSet1(0.3);
   mtl.Ph = 100;
-  mtl.ShdNo = EN5_RndShaderAdd("SKY");
+  mtl.ShdNo = 2;
   Uni->Ball.MtlNo = EN5_RndMtlAdd(&mtl);
 } /* End of 'EN5_UnitInit' function */
 /* Bounce ball unit inter frame events handle function.

@@ -56,22 +56,31 @@ VOID EN5_RndPrimsDraw( en5PRIMS *Prs, MATR World )
 {
   INT i;
 
+  EN5_RndShdAddons0 = Prs->NumOfPrims;
   World = MatrMulMatr(Prs->Trans, World);
   /* Draw all nontransparent primitives */
   for (i = 0; i < Prs->NumOfPrims; i++)
     if (EN5_RndMtlGet(Prs->Prims[i].MtlNo)->Trans == 1)
+    {
+      EN5_RndShdAddons1 = i;
       EN5_RndPrimDraw(&Prs->Prims[i], World);
-
+    }
   /* Draw all transparent primitives */
   glEnable(GL_CULL_FACE);
   glCullFace(GL_FRONT);
   for (i = 0; i < Prs->NumOfPrims; i++)
     if (EN5_RndMtlGet(Prs->Prims[i].MtlNo)->Trans != 1)
+    {
+      EN5_RndShdAddons1 = i;
       EN5_RndPrimDraw(&Prs->Prims[i], World);
+    }
   glCullFace(GL_BACK);
   for (i = 0; i < Prs->NumOfPrims; i++)
     if (EN5_RndMtlGet(Prs->Prims[i].MtlNo)->Trans != 1)
+    {
+      EN5_RndShdAddons1 = i;
       EN5_RndPrimDraw(&Prs->Prims[i], World);
+    }
   glDisable(GL_CULL_FACE);
 } /* End of 'EN5_RndPrimsDraw' function */
 
